@@ -1,0 +1,12 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Dist folder for compiled output
+dist/
+
+# Optional IDE files
+.DS_Store
+.
