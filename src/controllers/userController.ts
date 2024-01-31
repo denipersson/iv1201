@@ -17,3 +17,26 @@ export const registerUser = async (req: Request, res: Response) => {
         res.status(500).json({ message: "An error occurred when attempting to create user: " + error });
     }
 };
+
+export const loginUser = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+
+        // validate data...
+
+        // get user from database
+        // const user = await database.getUserByEmail(email);
+
+        // compare passwords
+        // const match = await bcrypt.compare(password, user.password);
+
+        // if (!match) {
+        //     res.status(401).json({ message: "Incorrect password!" });
+        //     return;
+        // }
+
+        res.status(200).json({ message: "User logged in!" });
+    } catch (error) {
+        res.status(500).json({ message: "An error occurred when attempting to log in user: " + error });
+    }
+}
