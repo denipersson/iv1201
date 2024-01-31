@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+</head>
+<body>
+    <h1>Add User</h1>
+    <form id="addUserForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="text" id="role" placeholder="Role" required>
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="contactInfo" placeholder="Contact Info" required>
+        <button type="submit">Add User</button>
+    </form>
+
+    <script>
+        document.getElementById('addUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const name = document.getElementById('name').value;
+            const contactInfo = document.getElementById('contactInfo').value;
+            
+            fetch('/api/addUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password, role, name, contactInfo }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('User added successfully');
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
