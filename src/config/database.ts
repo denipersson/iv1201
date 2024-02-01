@@ -22,7 +22,7 @@ export const query = async (text: string, params?: any[]) => {
     client.release(); 
   }
 };
-
+/*
 const setupDatabase = async () => {
     try {
         const sql = fs.readFileSync('./existing-database.sql', 'utf-8'); // Reads the SQL file from the root directory
@@ -34,3 +34,4 @@ const setupDatabase = async () => {
 };
 
 setupDatabase();
+*/
