@@ -1,11 +1,10 @@
 import { Pool } from 'pg';
 
-//ändra till erat
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'Recruit',
-  password: '1234',
+  database: 'db',
+  password: '420542',
   port: 5432,
 });
 
