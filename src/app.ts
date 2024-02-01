@@ -1,14 +1,14 @@
 import express, { Application } from 'express';
-import { registerUser, loginUser } from './controllers/userController';
-import { validateRegister } from './middleware/validateRegister';
-import { validateLogin } from './middleware/validateLogin';
+import { loginPerson, registerPerson } from './controllers/personController';
+import { validateLogin, validateRegistration } from './middleware/validate';
+
 
 const app: Application = express();
 
 app.use(express.json());
 
-app.post('/register', validateRegister, registerUser);
-app.post('/login', validateLogin, loginUser);
+app.post('/register', validateRegistration, registerPerson);
+app.post('/login', validateLogin, loginPerson);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
