@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, password, person_nmr, email } = req.body;
 
         // validate data...
 
