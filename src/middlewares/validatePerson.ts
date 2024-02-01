@@ -6,14 +6,20 @@ import { findPersonByEmail, findPersonByUsername } from '../dao/peronDAO';
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, username } = req.body;
 
-    if (!email || !password || !username) {
-        return res.status(400).json({ message: "Email, password, and username are required" });
-    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // if (!email || !password || !username) {
+    //     return res.status(400).json({ message: "Email, password, and username are required" });
+    // }
+
+    if (!emailRegex.test(email)) {
+        return next(new Error('Invalid email format'));
+      }
 
     try {
         const emailExists = await findPersonByEmail(email);
         if (emailExists) {
-            return next(new Error('Email is already in use')); //need to send with an error so register fails
+            return next(new Error('Email is already in use')); //need to send with an error so register fails. Error will be caught in controller
         }
 
         const usernameExists = await findPersonByUsername(username);
@@ -44,14 +50,14 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
         const passwordIsValid = await bcrypt.compare(password, person.password);
         if (!passwordIsValid) {
             return next(new Error('Invalid credentials'));
-            return res.status(401).json({ message: "Invalid credentials" });
+            //return res.status(401).json({ message: "Invalid credentials" });
         }
 
         res.locals.user = person;
 
         next();
     } catch (error) {
-        console.error('Error during login validation:', error);
+       // console.error('Error during login validation:', error);
         res.status(500).json({ message: "An error occurred during login validation" });
     }
 };
