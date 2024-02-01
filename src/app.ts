@@ -1,7 +1,9 @@
 import express, { Application } from 'express';
 import { loginPerson, registerPerson } from './controllers/personController';
 import { validateLogin, validateRegistration } from './middleware/validate';
+import * as dotenv from 'dotenv';
 
+dotenv.config(); // Load environment variables from .env file, which will be ignored by Git. In this file we will store sensitive information like database credentials and JWT secret key
 
 const app: Application = express();
 

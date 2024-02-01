@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+const fs = require('fs');
 
 const pool = new Pool({
   user: 'postgres',
@@ -21,3 +22,15 @@ export const query = async (text: string, params?: any[]) => {
     client.release(); 
   }
 };
+
+const setupDatabase = async () => {
+    try {
+        const sql = fs.readFileSync('./existing-database.sql', 'utf-8'); // Reads the SQL file from the root directory
+        await query(sql);
+        console.log('Database setup complete');
+    } catch (err) {
+        console.error('Error setting up database:', err);
+    }
+};
+
+setupDatabase();

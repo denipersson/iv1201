@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
-import { findPersonByEmail, findPersonByUsername } from '../dao/peronDAO';
+import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
 
 
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { createPerson } from '../dao/peronDAO'; 
+import { createPerson } from '../dao/personDAO'; 
+import jwt from 'jsonwebtoken';
 
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
-
 
     try {
         const newPerson = await createPerson(name, surname, pnr, email, password, role_id, username);
@@ -16,11 +16,18 @@ export const registerPerson = async (req: Request, res: Response) => {
 };
 
 export const loginPerson = (req: Request, res: Response) => {
-    // Get user from res.locals
-    const user = res.locals.user;
+    const user = res.locals.user; // The user object should be set by `validateLogin` middleware
     if (user) {
-        res.status(200).json({ message: "Login successful", userId: user.person_id });
-        console.log(user.person_id);
+        // Create token
+        const secretKey = process.env.JWT_SECRET || 'your-secret-key';
+        const token = jwt.sign(
+            { userId: user.person_id, username: user.username },
+            secretKey,
+            { expiresIn: '24h' } // Token expires in 24 hours
+        );
+
+        // Send the token in the response
+        res.status(200).json({ message: "Login successful", token: token });
     } else {
         res.status(401).json({ message: "Login failed" });
     }
