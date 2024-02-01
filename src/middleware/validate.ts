@@ -4,31 +4,44 @@ import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
 
 
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, username } = req.body;
+    const { name, surname, pnr, email, password, role_id, username } = req.body;
 
+    // Check if all fields are present
+    if (!name || !surname || !pnr || !email || !password || !username) {
+        console.log(name, surname, pnr, email, password, role_id, username);
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Regular expression patterns for validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const pnrRegex = /^[0-9]{10,12}$/; // This pattern is a simple example, adjust according to your actual personal number format
 
-    // if (!email || !password || !username) {
-    //     return res.status(400).json({ message: "Email, password, and username are required" });
-    // }
-
+    // Validate email format
     if (!emailRegex.test(email)) {
-        return next(new Error('Invalid email format'));
-      }
+        return res.status(400).json({ message: 'Invalid email format' });
+    }
+
+    // Validate personal number format
+    if (!pnrRegex.test(pnr)) {
+        return res.status(400).json({ message: 'Invalid personal number format' });
+    }
 
     try {
+        // Check if email or username already exists in the database
         const emailExists = await findPersonByEmail(email);
         if (emailExists) {
-            return next(new Error('Email is already in use')); //need to send with an error so register fails. Error will be caught in controller
+            return res.status(400).json({ message: 'Email is already in use' });
         }
 
         const usernameExists = await findPersonByUsername(username);
         if (usernameExists) {
-            return next(new Error('Username is already in use'));
+            return res.status(400).json({ message: 'Username is already in use' });
         }
 
+        // If all checks pass, move to the next middleware (which will be your registerPerson controller)
         next();
     } catch (error) {
+        // If an error occurs during the database checks, pass it to the error-handling middleware
         next(error);
     }
 };
