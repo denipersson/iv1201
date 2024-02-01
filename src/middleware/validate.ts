@@ -7,7 +7,8 @@ export const validateRegistration = async (req: Request, res: Response, next: Ne
     const { name, surname, pnr, email, password, role_id, username } = req.body;
 
     // Check if all fields are present
-    if (!name || !surname || !pnr || !email || !password || !role_id || !username) {
+    if (!name || !surname || !pnr || !email || !password || !username) {
+        console.log(name, surname, pnr, email, password, role_id, username);
         return res.status(400).json({ message: "All fields are required" });
     }
 
