@@ -6,13 +6,22 @@ export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
 
     try {
+        // Since validation has passed, we can proceed to create the new person
         const newPerson = await createPerson(name, surname, pnr, email, password, role_id, username);
-        res.status(201).json({ message: "Registration successful", personId: newPerson.person_id });
+
+        // If creation is successful, respond with a success message
+        res.status(201).json({
+            message: "Registration successful",
+            personId: newPerson.person_id
+        });
     } catch (error) {
-        const errorMessage = (error as Error).message;
-        res.status(500).json({ error: "Registration failed", details: errorMessage });
+        // If there's a problem during the creation, log it and respond with an error message
+        console.error('Error during registration:', error);
+        res.status(500).json({
+            message: "Registration failed",
+            error: (error as Error).message
+        });
     }
-    
 };
 
 export const loginPerson = (req: Request, res: Response) => {
