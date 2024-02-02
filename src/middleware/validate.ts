@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
-
+import jwt from 'jsonwebtoken';
 
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -73,6 +73,16 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
        // console.error('Error during login validation:', error);
         res.status(500).json({ message: "An error occurred during login validation" });
     }
+};
+
+// Function to validate a token - this will be used in a middleware to protect routes that require a valid session
+export const validateToken = (token: string): { valid: boolean; decoded?: any } => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    return { valid: true, decoded };
+  } catch (error) {
+    return { valid: false };
+  }
 };
 
 
