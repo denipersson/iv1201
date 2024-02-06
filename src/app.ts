@@ -1,7 +1,8 @@
 import express, { Application } from 'express';
-import { loginPerson, registerPerson } from './controllers/personController';
+import { getApplicants, loginPerson, registerPerson } from './controllers/personController';
 import { validateLogin, validateRegistration } from './middleware/validate';
 import * as dotenv from 'dotenv';
+import { validateAdmin } from './middleware/validateAdmin';
 
 const cors = require('cors');
 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 app.post('/register', validateRegistration, registerPerson);
 app.post('/login', validateLogin, loginPerson);
+app.get('/getApplicants', validateAdmin, getApplicants);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

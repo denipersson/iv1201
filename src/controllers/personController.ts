@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { createPerson } from '../dao/personDAO'; 
-import jwt from 'jsonwebtoken';
-import { User } from '../model/User';
+import { createPerson, findApplicants } from '../dao/personDAO'; 
+import { User, sanitizeUser } from '../model/User';
+import { createToken } from '../middleware/token';
 
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -30,18 +30,25 @@ export const loginPerson = (req: Request, res: Response) => {
     if (user) {
         // Create token
         const secretKey = process.env.JWT_SECRET as string;
-        const token = jwt.sign(
-            { userId: user.person_id, username: user.username },
-            secretKey,
-            { expiresIn: '24h' } // Token expires in 24 hours
-        );
-
-        user.password = ''; // Remove the password from the user object before responding
+        const token = createToken(user);
 
         // Send the token in the response
         res.status(200).json({ message: "Login successful", user: user, token: token });
     } else {
         res.status(401).json({ message: "Login failed" });
+    }
+};
+
+export const getApplicants = async (req: Request, res: Response) => {
+    try {
+        const applicants = await findApplicants();
+        for (let i = 0; i < applicants.length; i++) {
+            applicants[i] = sanitizeUser(applicants[i]);
+        }
+        res.status(200).json(applicants);
+    } catch (error) {
+        console.error('Error during applicant retrieval:', error);
+        res.status(500).json('An error occurred during applicant retrieval');
     }
 };
 

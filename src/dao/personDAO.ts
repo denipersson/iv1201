@@ -1,6 +1,6 @@
 import { query } from '../config/database';
 import bcrypt from 'bcrypt';
-import { User } from '../model/User';
+import { User, sanitizeUser } from '../model/User';
 
 export const createPerson = async (name: string, surname: string, pnr: string, email: string, rawPassword: string, roleId: number, username: string) => {
     const saltRounds = 10;
@@ -15,7 +15,8 @@ export const createPerson = async (name: string, surname: string, pnr: string, e
 
     try {
         const result = await query(sql, params);
-        return result.rows[0]; // Assuming we want to return the created person's ID
+        const user = result.rows[0];
+        return user;
     } catch (err) {
         throw err;
     }
@@ -45,9 +46,24 @@ export const findPersonByEmail = async (email: string) => {
 
     try {
         const result = await query(sql, params);
-        return result.rows.length ? result.rows[0] : null;
+        const user: User = result.rows[0];
+        return user;
     } catch (err) {
         throw err;
     }
 };
 
+//find persons where role ID is 2, put them into an array of type User and return it
+export const findApplicants = async () => {
+    const sql = `SELECT * FROM public.person WHERE role_id = 2;`;
+
+    try {
+        const result = await query(sql);
+
+        // put into aray of users:
+        const applicants: User[] = result.rows;
+        return applicants;
+    } catch (err) {
+        throw err;
+    }
+};
