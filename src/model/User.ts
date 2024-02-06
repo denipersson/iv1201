@@ -27,3 +27,11 @@ export class User {
             this.id = row.id;
         }
     }
+}
+
+// Set User's password to '' when sending it to the client
+export const sanitizeUser = (user: User): User => {
+    const sanitizedUser = user;
+    sanitizedUser.password = '';
+    return sanitizedUser;
+};
