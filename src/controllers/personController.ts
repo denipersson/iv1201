@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createPerson } from '../dao/personDAO'; 
+import { createPerson, findApplicants } from '../dao/personDAO'; 
 import jwt from 'jsonwebtoken';
 import { User } from '../model/User';
 
@@ -36,12 +36,20 @@ export const loginPerson = (req: Request, res: Response) => {
             { expiresIn: '24h' } // Token expires in 24 hours
         );
 
-        user.password = ''; // Remove the password from the user object before responding
-
         // Send the token in the response
         res.status(200).json({ message: "Login successful", user: user, token: token });
     } else {
         res.status(401).json({ message: "Login failed" });
+    }
+};
+
+export const getApplicants = async (req: Request, res: Response) => {
+    try {
+        const applicants = await findApplicants();
+        res.status(200).json(applicants);
+    } catch (error) {
+        console.error('Error during applicant retrieval:', error);
+        res.status(500).json('An error occurred during applicant retrieval');
     }
 };
 
