@@ -1,6 +1,6 @@
 import { query } from '../config/database';
 import bcrypt from 'bcrypt';
-import { User, sanitizeUser } from '../model/User';
+import { User } from '../model/User';
 
 export const createPerson = async (name: string, surname: string, pnr: string, email: string, rawPassword: string, roleId: number, username: string) => {
     const saltRounds = 10;
@@ -15,8 +15,7 @@ export const createPerson = async (name: string, surname: string, pnr: string, e
 
     try {
         const result = await query(sql, params);
-        const user = result.rows[0];
-        return user;
+        return result.rows[0]; // Assuming we want to return the created person's ID
     } catch (err) {
         throw err;
     }
@@ -58,9 +57,35 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
     }
 };
 
+//find persons where role ID is 2, put them into an array of type User and return it
+export const findApplicants = async () => {
+  const sql = `SELECT * FROM public.person WHERE role_id = 2;`;
+
+  try {
+      const result = await query(sql);
+
+      // put into aray of users:
+      const applicants: User[] = result.rows;
+      return applicants;
+  } catch (err) {
+      throw err;
+  }
+};
+
 export const addCompetency = async ( user: User, competency: string) => {
-    
-}
+    const sql = `INSERT INTO public.competency (name) VALUES ($1) RETURNING id;`;
+    const params = [competency];
+
+    try {
+        const result = await query(sql, params);
+        const competencyId = result.rows[0].id;
+
+        const linkSql = `INSERT INTO public.person_competency (person_id, competency_id) VALUES ($1, $2);`;
+        await query(linkSql, [user.person_id, competencyId]);
+    } catch (err) {
+        throw err;
+    }
+};
 
 export const updateCompetencies = async (user: User, competencies: string[]) => {
     // Begin transaction
@@ -100,20 +125,5 @@ export const updateCompetencies = async (user: User, competencies: string[]) => 
         // Rollback the transaction in case of error
         await query('ROLLBACK');
         throw err; // Rethrow the error for further handling/logging
-    }
-};
-
-//find persons where role ID is 2, put them into an array of type User and return it
-export const findApplicants = async () => {
-    const sql = `SELECT * FROM public.person WHERE role_id = 2;`;
-
-    try {
-        const result = await query(sql);
-
-        // put into aray of users:
-        const applicants: User[] = result.rows;
-        return applicants;
-    } catch (err) {
-        throw err;
     }
 };

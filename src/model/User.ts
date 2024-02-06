@@ -1,15 +1,14 @@
 // User.ts
 export class User {
+    person_id: string;
     name: string;
     surname: string;
     email: string;
+    password: string;
     competencies: Array<string>;
     pnr: string;
-    username: string;
-    password: string;
-    person_id: string;
     role_id: number;
-
+    username: string;
 
     //checks email, but needs to be done frontend too.
     private isValid(): boolean {

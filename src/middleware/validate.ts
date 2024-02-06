@@ -55,6 +55,7 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
 
     try {
         const person = await findPersonByUsername(username);
+        
         if (!person) {
             return next(new Error('User not found'));
            // return res.status(404).json({ message:  });
@@ -65,6 +66,7 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
             return next(new Error('Invalid credentials'));
             //return res.status(401).json({ message: "Invalid credentials" });
         }
+
 
         res.locals.user = person;
 
