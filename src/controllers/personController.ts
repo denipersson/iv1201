@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { createPerson, findApplicants } from '../dao/personDAO'; 
-import jwt from 'jsonwebtoken';
 import { User, sanitizeUser } from '../model/User';
+import { createToken } from '../middleware/token';
 
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -30,11 +30,7 @@ export const loginPerson = (req: Request, res: Response) => {
     if (user) {
         // Create token
         const secretKey = process.env.JWT_SECRET as string;
-        const token = jwt.sign(
-            { userId: user.person_id, username: user.username },
-            secretKey,
-            { expiresIn: '24h' } // Token expires in 24 hours
-        );
+        const token = createToken(user);
 
         // Send the token in the response
         res.status(200).json({ message: "Login successful", user: user, token: token });

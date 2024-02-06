@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { validateToken } from "./validate";
 import { findPersonByUsername } from '../dao/personDAO';
+import { getUserFromToken } from './token';
 
 // validate that the token is valid and also that the user is an admin
 
@@ -13,9 +14,10 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
 
     // The frontend sends a get request containing the token in the header, as well as the username
     const token = headers['token'] as string;
-    const username = headers['username'] as string;
+    const userInfo = getUserFromToken(token);
+    const username = userInfo.username;
 
-    if (!token || !username) {
+    if (!token) {
         return res.status(401).json('Headers missing');
     }
     const check = validateToken(token);
