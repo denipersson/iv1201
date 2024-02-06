@@ -7,7 +7,9 @@ export class User {
     pnr: string;
     username: string;
     password: string;
-    id: string;
+    person_id: string;
+    role_id: number;
+
 
     //checks email, but needs to be done frontend too.
     private isValid(): boolean {
@@ -17,15 +19,15 @@ export class User {
     constructor(result: any){
         const row = result.rows[0];
 
-            this.name = row.name;
-            this.surname = row.surname;
-            this.email = row.email;
-            this.competencies = row.competencies;
-            this.pnr = row.pnr;
-            this.username = row.username;
-            this.password = row.password;
-            this.id = row.id;
-        }
+        this.name = row.name;
+        this.surname = row.surname;
+        this.email = row.email;
+        this.competencies = row.competencies;
+        this.pnr = row.pnr;
+        this.username = row.username;
+        this.password = row.password;
+        this.person_id = row.id;
+        this.role_id = row.role_id;
     }
 }
 
