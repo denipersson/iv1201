@@ -31,7 +31,7 @@ export const loginPerson = (req: Request, res: Response) => {
         // Create token
         const secretKey = process.env.JWT_SECRET as string;
         const token = jwt.sign(
-            { userId: user.person_id, username: user.username },
+            { userId: user.id, username: user.username },
             secretKey,
             { expiresIn: '24h' } // Token expires in 24 hours
         );
