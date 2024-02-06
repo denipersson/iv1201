@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { createPerson, findApplicants } from '../dao/personDAO'; 
 import jwt from 'jsonwebtoken';
-import { User } from '../model/User';
+import { User, sanitizeUser } from '../model/User';
 
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -46,6 +46,9 @@ export const loginPerson = (req: Request, res: Response) => {
 export const getApplicants = async (req: Request, res: Response) => {
     try {
         const applicants = await findApplicants();
+        for (let i = 0; i < applicants.length; i++) {
+            applicants[i] = sanitizeUser(applicants[i]);
+        }
         res.status(200).json(applicants);
     } catch (error) {
         console.error('Error during applicant retrieval:', error);

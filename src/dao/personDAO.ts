@@ -62,10 +62,6 @@ export const findApplicants = async () => {
 
         // put into aray of users:
         const applicants: User[] = result.rows;
-        for (let i = 0; i < applicants.length; i++) {
-            applicants[i] = sanitizeUser(applicants[i]);
-        }
-
         return applicants;
     } catch (err) {
         throw err;
