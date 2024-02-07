@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createPerson, findApplicants } from '../dao/personDAO'; 
+import { addCompetenceToPerson, createPerson, findApplicants, findOrCreateCompetence } from '../dao/personDAO'; 
 import { User, sanitizeUser } from '../model/User';
 import { createToken } from '../middleware/token';
 
@@ -49,6 +49,26 @@ export const getApplicants = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error during applicant retrieval:', error);
         res.status(500).json('An error occurred during applicant retrieval');
+    }
+};
+
+export const addCompetencyToPersonController = async (req: Request, res: Response) => {
+    const { competencyName, yearsOfExperience } = req.body;
+    const personId = res.locals.personId;
+
+    try {
+        const competenceId = await findOrCreateCompetence(competencyName);
+        const competencyProfile = await addCompetenceToPerson(personId, competenceId, yearsOfExperience);
+        res.status(201).json({
+            message: 'Competency added successfully',
+            competencyProfileId: competencyProfile.competence_profile_id,
+            competenceName: competencyName, 
+            competenceId: competenceId,
+            personId: personId
+        });
+    } catch (error) {
+        console.error('Error adding competency to person:', error);
+        res.status(500).json('An error occurred during adding comptency to person');
     }
 };
 
