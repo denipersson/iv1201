@@ -125,7 +125,7 @@ export const getCompetenciesForPersonUsingPID = async (personID: number) => {
     const sql = `
     SELECT cp.competence_profile_id, cp.competence_id, cp.years_of_experience, c.competence_name
     FROM public.competence_profile cp
-    INNER JOIN public.competences c ON cp.competence_id = c.competence_id
+    INNER JOIN public.competence c ON cp.competence_id = c.competence_id
     WHERE cp.person_id = $1;
     `;
 
