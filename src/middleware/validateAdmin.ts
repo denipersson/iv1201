@@ -50,23 +50,26 @@ export const validateAdminOrOwner = async (req: Request, res: Response, next: Ne
     }
 
     const token = headers['token'] as string;
-    const pidHeader = headers['pid'] as string;
 
-    if (!token || !pidHeader) {
+    if (!token) {
         return res.status(401).json('Token or PID missing in headers');
     }
+
+    const userInfo = getUserFromToken(token);
+
+    const p_id = userInfo.person_id;
 
     // validating token. we should probs function this seperately as its gonna get repeated if we keep doing these endpoints. 
     //todo function this section to repeat it.... 
     const check = validateToken(token);
-    const userInfo = getUserFromToken(token);
+    // Remove the duplicate declaration of 'userInfo' here
+    // const userInfo = getUserFromToken(token);
 
     if (!check.valid || !userInfo) {
         return res.status(401).json('Invalid token');
     }
 
     const username = userInfo.username;
-    const personIDFromHeader = parseInt(pidHeader);
 
     // Find user role by username
     //same here uwu
@@ -86,13 +89,8 @@ export const validateAdminOrOwner = async (req: Request, res: Response, next: Ne
         return;
     }
 
-    if (isNaN(personIDFromHeader)) {
-        // If pidHeader is not a valid number
-        return res.status(400).json('Invalid PID in the header');
-    }
-
     // If not an admin, check if the user is accessing their own data
-    if (userRoleData.person_id === personIDFromHeader) {
+    if (userRoleData.person_id === p_id) {
         console.log('User is accessing their own data');
         next();
     } else {

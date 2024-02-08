@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addCompetenceToPerson, createPerson, findApplicants, findOrCreateCompetence, getCompetenciesForPersonUsingPID} from '../dao/personDAO'; 
+import { insertCompetenceToPerson, createPerson, findApplicants, findOrCreateCompetence, getCompetenciesForPersonUsingPID} from '../dao/personDAO'; 
 import { User, sanitizeUser as sanitizeUsers } from '../model/User';
 import { createToken } from '../middleware/token';
 
@@ -52,13 +52,13 @@ export const getApplicants = async (req: Request, res: Response) => {
     }
 };
 
-export const addCompetencyToPersonController = async (req: Request, res: Response) => {
+export const addCompetencyToPerson = async (req: Request, res: Response) => {
     const { competencyName, yearsOfExperience } = req.body;
     const personId = res.locals.personId;
 
     try {
         const competenceId = await findOrCreateCompetence(competencyName);
-        const competencyProfile = await addCompetenceToPerson(personId, competenceId, yearsOfExperience);
+        const competencyProfile = await insertCompetenceToPerson(personId, competenceId, yearsOfExperience);
         res.status(201).json({
             message: 'Competency added successfully',
             competencyProfileId: competencyProfile.competence_profile_id,

@@ -105,7 +105,7 @@ export const findOrCreateCompetence = async (name: string) => {
     }
 };
 
-export const addCompetenceToPerson = async (personId: number, competenceId: number, yearsOfExperience: number) => {
+export const insertCompetenceToPerson = async (personId: number, competenceId: number, yearsOfExperience: number) => {
     const sql = `
     INSERT INTO public.competence_profile (person_id, competence_id, years_of_experience)
     VALUES ($1, $2, $3)

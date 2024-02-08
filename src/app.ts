@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import { addCompetencyToPersonController, getApplicants, getCompetencies, loginPerson, registerPerson } from './controllers/personController';
+import { addCompetencyToPerson, getApplicants, getCompetencies, loginPerson, registerPerson } from './controllers/personController';
 import { validateCompetencyAdd, validateLogin, validateRegistration } from './middleware/validate';
 import * as dotenv from 'dotenv';
 import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin';
@@ -21,7 +21,7 @@ app.use(express.json());
 app.post('/register', validateRegistration, registerPerson);
 app.post('/login', validateLogin, loginPerson);
 app.get('/getApplicants', validateAdmin, getApplicants);
-app.post('/addCompetencyToPerson', validateCompetencyAdd, addCompetencyToPersonController);
+app.post('/addCompetencyToPerson', validateCompetencyAdd, addCompetencyToPerson);
 app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
