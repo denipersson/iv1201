@@ -87,43 +87,43 @@ export const addCompetency = async ( user: User, competency: string) => {
     }
 };
 
-export const updateCompetencies = async (user: User, competencies: string[]) => {
-    // Begin transaction
-    await query('BEGIN');
-
+    // Check if the the competency exists, else create a new competenceId for the new competency. 
+    // This function is not case sensitive. So there will be two new id´s for "a" and "A"
+export const findOrCreateCompetence = async (name: string) => {
+    let sql = `SELECT competence_id FROM public.competence WHERE name = $1;`;
+    let params = [name];
     try {
-        // Clear existing competencies for the user using the username
-        const clearSql = `DELETE FROM person_competency pc 
-                          USING person p
-                          WHERE pc.person_id = p.id AND p.username = $1;`;
-        await query(clearSql, [user.username]);
-
-        for (const competency of competencies) {
-            let competencyId;
-            const competencyCheckSql = `SELECT id FROM competency WHERE name = $1;`;
-            const competencyResult = await query(competencyCheckSql, [competency]);
-
-            if (competencyResult.rows.length === 0) {
-                // Insert competency if it doesn't exist
-                const insertCompetencySql = `INSERT INTO competency (name) VALUES ($1) RETURNING id;`;
-                const insertedCompetency = await query(insertCompetencySql, [competency]);
-                competencyId = insertedCompetency.rows[0].id;
-            } else {
-                // Use existing competency ID
-                competencyId = competencyResult.rows[0].id;
-            }
-
-            // b. Link user to competency in `person_competency` using the username
-            const linkSql = `INSERT INTO person_competency (person_id, competency_id) 
-                             SELECT p.id, $2 FROM person p WHERE p.username = $1;`;
-            await query(linkSql, [user.username, competencyId]);
+        let result = await query(sql, params);
+        if (result.rows.length === 0) {
+            sql = `INSERT INTO public.competence (name) VALUES ($1) RETURNING competence_id;`;
+            result = await query(sql, params);
         }
-
-        // Commit the transaction if all goes well
-        await query('COMMIT');
+        return result.rows[0].competence_id;
     } catch (err) {
-        // Rollback the transaction in case of error
-        await query('ROLLBACK');
-        throw err; // Rethrow the error for further handling/logging
+        throw err;
     }
 };
+
+export const addCompetenceToPerson = async (personId: number, competenceId: number, yearsOfExperience: number) => {
+    const sql = `
+    INSERT INTO public.competence_profile (person_id, competence_id, years_of_experience)
+    VALUES ($1, $2, $3)
+    RETURNING competence_profile_id;`;
+
+    const params = [personId, competenceId, yearsOfExperience];
+
+    try {
+        const result = await query(sql, params);
+        return result.rows[0]; 
+    } catch (err) {
+        throw err;
+    }
+};
+
+// sql query to check the database for added compentencies for a user.
+// SELECT p.username, c.name AS competency_name, cp.years_of_experience
+// FROM person p
+// JOIN competence_profile cp ON p.person_id = cp.person_id
+// JOIN competence c ON cp.competence_id = c.competence_id
+// WHERE p.username = 'luu';
+

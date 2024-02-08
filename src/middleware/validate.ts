@@ -87,4 +87,29 @@ export const validateToken = (token: string): { valid: boolean; decoded?: any } 
   }
 };
 
+export const validateCompetencyAdd = async (req: Request, res: Response, next: NextFunction) => {
+    const { username, competencyName, yearsOfExperience } = req.body;
+
+    // Basic validation for input presence
+    if (!username || !competencyName || yearsOfExperience === undefined) {
+        return res.status(400).json({ message: "Username, competency name, and years of experience are required" });
+    }
+
+    // Additional validations can be added here, maybe yearsOfExperience is number?
+    // Do we need to check so the user is logged in or should we assume when the user is here they are logged in?
+
+    try {
+        const person = await findPersonByUsername(username);
+        if (!person) {
+            return res.status(404).json({ message: 'Person not found' });
+        }
+
+        
+        res.locals.personId = person.person_id;
+        next();
+    } catch (error) {
+        next(error); // Pass errors to the error-handling middleware
+    }
+};
+
 
