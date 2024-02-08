@@ -1,6 +1,6 @@
 // User.ts
 export class User {
-    person_id: string;
+    person_id: number;
     name: string;
     surname: string;
     email: string;
@@ -11,7 +11,7 @@ export class User {
     username: string;
 
     //checks email, but needs to be done frontend too.
-    private isValid(): boolean {
+    private isValidEmail(): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(this.email);
     }
@@ -21,6 +21,7 @@ export class User {
         this.name = row.name;
         this.surname = row.surname;
         this.email = row.email;
+        //competencies måste dealas med seperat då de inte kommer finnas i user. 
         this.competencies = row.competencies;
         this.pnr = row.pnr;
         this.username = row.username;

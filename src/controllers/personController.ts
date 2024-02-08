@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { addCompetenceToPerson, createPerson, findApplicants, findOrCreateCompetence } from '../dao/personDAO'; 
-import { User, sanitizeUser } from '../model/User';
+import { addCompetenceToPerson, createPerson, findApplicants, findOrCreateCompetence, getCompetenciesForPersonUsingPID} from '../dao/personDAO'; 
+import { User, sanitizeUser as sanitizeUsers } from '../model/User';
 import { createToken } from '../middleware/token';
 
 export const registerPerson = async (req: Request, res: Response) => {
@@ -43,7 +43,7 @@ export const getApplicants = async (req: Request, res: Response) => {
     try {
         const applicants = await findApplicants();
         for (let i = 0; i < applicants.length; i++) {
-            applicants[i] = sanitizeUser(applicants[i]);
+            applicants[i] = sanitizeUsers(applicants[i]);
         }
         res.status(200).json(applicants);
     } catch (error) {
@@ -71,6 +71,23 @@ export const addCompetencyToPersonController = async (req: Request, res: Respons
         res.status(500).json('An error occurred during adding comptency to person');
     }
 };
+/**
+ * Controller for getting all competencies of a specific PID.
+ * @param req 
+ * @param res 
+ */
+export const getCompetencies = async (req: Request, res: Response) => {
+    const personId = res.locals.personId;
+    try {
+        const compentencies = await getCompetenciesForPersonUsingPID(personId);
+        res.status(200).json(compentencies);
+    } catch (error) {
+        console.error('Error during applicant retrieval:', error);
+        res.status(500).json('An error occurred during applicant retrieval');
+    }
+};
+
+
 
 
 

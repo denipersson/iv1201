@@ -47,7 +47,8 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
     try {
         const result = await query(sql, params);
         if (result.rows.length) {
-            // Directly use the result to create a User instance
+            // Directly use the esult to create a User instance
+            result.rows[0].competencies = getCompetenciesForPersonUsingPID(result.rows[0].pnr);
             const user = new User(result); // Here, ensuring `result` fits the User constructor expectation
             return user;
         }
@@ -115,6 +116,24 @@ export const addCompetenceToPerson = async (personId: number, competenceId: numb
     try {
         const result = await query(sql, params);
         return result.rows[0]; 
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const getCompetenciesForPersonUsingPID = async (personID: number) => {
+    const sql = `
+    SELECT cp.competence_profile_id, cp.competence_id, cp.years_of_experience, c.competence_name
+    FROM public.competence_profile cp
+    INNER JOIN public.competences c ON cp.competence_id = c.competence_id
+    WHERE cp.person_id = $1;
+    `;
+
+    const params = [personID];
+
+    try {
+        const result = await query(sql, params);
+        return result.rows; 
     } catch (err) {
         throw err;
     }
