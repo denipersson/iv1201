@@ -50,47 +50,39 @@ export const validateAdminOrOwner = async (req: Request, res: Response, next: Ne
     }
 
     const token = headers['token'] as string;
+    const username = headers['username'] as string;
 
     if (!token) {
-        return res.status(401).json('Token or PID missing in headers');
+        return res.status(401).json('Token or username missing in headers');
+    }
+    const check = validateToken(token);
+
+
+    if (!check.valid) {
+        return res.status(401).json('Invalid token');
     }
 
     const userInfo = getUserFromToken(token);
 
-    const p_id = userInfo.person_id;
-
-    // validating token. we should probs function this seperately as its gonna get repeated if we keep doing these endpoints. 
-    //todo function this section to repeat it.... 
-    const check = validateToken(token);
-    // Remove the duplicate declaration of 'userInfo' here
-    // const userInfo = getUserFromToken(token);
-
-    if (!check.valid || !userInfo) {
-        return res.status(401).json('Invalid token');
-    }
-
-    const username = userInfo.username;
-
     // Find user role by username
-    //same here uwu
-      const userRoleData = await findPersonByUsername(username).catch((error) => {
+      const user = await findPersonByUsername(userInfo.username).catch((error) => {
         console.error('Error during user retrieval:', error);
         res.status(500).json('An error occurred during user retrieval');
     });
 
-    if (!userRoleData) {
+    if (!user) {
         return res.status(404).json('User not found');
     }
 
     // first check. admin just approved. 
-    if (userRoleData.role_id === 1) {
+    if (user.role_id == 1) {
         console.log('User is an admin');
         next();
         return;
     }
 
     // If not an admin, check if the user is accessing their own data
-    if (userRoleData.person_id === p_id) {
+    if (username === userInfo.username) {
         console.log('User is accessing their own data');
         next();
     } else {
