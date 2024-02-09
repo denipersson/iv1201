@@ -38,4 +38,54 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
         console.error('Error during admin validation:', error);
         res.status(500).json('An error occurred during admin validation');
     });
+}
+
+
+// validate that the token is valid and also that the user is either an admin or the owner of the competencies. slightly stolen from deni, but i neded to add it 
+export const validateAdminOrOwner = async (req: Request, res: Response, next: NextFunction) => {
+    const headers = req.headers;
+
+    if (!headers) {
+        return res.status(400).json('Headers missing');
+    }
+
+    const token = headers['token'] as string;
+    const username = headers['username'] as string;
+
+    if (!token) {
+        return res.status(401).json('Token or username missing in headers');
+    }
+    const check = validateToken(token);
+
+
+    if (!check.valid) {
+        return res.status(401).json('Invalid token');
+    }
+
+    const userInfo = getUserFromToken(token);
+
+    // Find user role by username
+      const user = await findPersonByUsername(userInfo.username).catch((error) => {
+        console.error('Error during user retrieval:', error);
+        res.status(500).json('An error occurred during user retrieval');
+    });
+
+    if (!user) {
+        return res.status(404).json('User not found');
+    }
+
+    // first check. admin just approved. 
+    if (user.role_id == 1) {
+        console.log('User is an admin');
+        next();
+        return;
+    }
+
+    // If not an admin, check if the user is accessing their own data
+    if (username === userInfo.username) {
+        console.log('User is accessing their own data');
+        next();
+    } else {
+        res.status(403).json('User is not authorized to access this data');
+    }
 };

@@ -1,8 +1,8 @@
 import express, { Application } from 'express';
-import { getApplicants, loginPerson, registerPerson } from './controllers/personController';
-import { validateLogin, validateRegistration } from './middleware/validate';
+import { addCompetencyToPerson, getApplicants, getCompetencies, loginPerson, registerPerson } from './controllers/personController';
+import { validateCompetencyAdd, validateLogin, validateRegistration } from './middleware/validate';
 import * as dotenv from 'dotenv';
-import { validateAdmin } from './middleware/validateAdmin';
+import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin';
 
 const cors = require('cors');
 
@@ -21,7 +21,8 @@ app.use(express.json());
 app.post('/register', validateRegistration, registerPerson);
 app.post('/login', validateLogin, loginPerson);
 app.get('/getApplicants', validateAdmin, getApplicants);
-
+app.post('/addCompetencyToPerson', validateCompetencyAdd, addCompetencyToPerson);
+app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

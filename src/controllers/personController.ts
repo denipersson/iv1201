@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { createPerson, findApplicants } from '../dao/personDAO'; 
-import { User, sanitizeUser } from '../model/User';
+import { insertCompetenceToPerson, createPerson, findApplicants, findOrCreateCompetence, getCompetenciesForPersonUsingPID} from '../dao/personDAO'; 
+import { User, sanitizeUser as sanitizeUsers } from '../model/User';
 import { createToken } from '../middleware/token';
 
 export const registerPerson = async (req: Request, res: Response) => {
@@ -43,7 +43,7 @@ export const getApplicants = async (req: Request, res: Response) => {
     try {
         const applicants = await findApplicants();
         for (let i = 0; i < applicants.length; i++) {
-            applicants[i] = sanitizeUser(applicants[i]);
+            applicants[i] = sanitizeUsers(applicants[i]);
         }
         res.status(200).json(applicants);
     } catch (error) {
@@ -51,6 +51,43 @@ export const getApplicants = async (req: Request, res: Response) => {
         res.status(500).json('An error occurred during applicant retrieval');
     }
 };
+
+export const addCompetencyToPerson = async (req: Request, res: Response) => {
+    const { competencyName, yearsOfExperience } = req.body;
+    const personId = res.locals.personId;
+
+    try {
+        const competenceId = await findOrCreateCompetence(competencyName);
+        const competencyProfile = await insertCompetenceToPerson(personId, competenceId, yearsOfExperience);
+        res.status(201).json({
+            message: 'Competency added successfully',
+            competencyProfileId: competencyProfile.competence_profile_id,
+            competenceName: competencyName, 
+            competenceId: competenceId,
+            personId: personId
+        });
+    } catch (error) {
+        console.error('Error adding competency to person:', error);
+        res.status(500).json('An error occurred during adding comptency to person');
+    }
+};
+/**
+ * Controller for getting all competencies of a specific PID.
+ * @param req 
+ * @param res 
+ */
+export const getCompetencies = async (req: Request, res: Response) => {
+    const personId = res.locals.personId;
+    try {
+        const compentencies = await getCompetenciesForPersonUsingPID(personId);
+        res.status(200).json(compentencies);
+    } catch (error) {
+        console.error('Error during applicant retrieval:', error);
+        res.status(500).json('An error occurred during applicant retrieval');
+    }
+};
+
+
 
 
 

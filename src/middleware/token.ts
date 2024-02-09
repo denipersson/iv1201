@@ -4,7 +4,7 @@ import { User } from "../model/User";
 export function createToken(user: User) {
     const secretKey = process.env.JWT_SECRET as string;
     const token = jwt.sign(
-        { userId: user.person_id, username: user.username },
+        { person_id: user.person_id, username: user.username },
         secretKey,
         { expiresIn: '24h' } // Token expires in 24 hours
     );
@@ -12,6 +12,6 @@ export function createToken(user: User) {
 }
 export function getUserFromToken(token: string) {
     const secretKey = process.env.JWT_SECRET as string;
-    const decodedToken = jwt.verify(token, secretKey) as { userId: number; username: string; };
+    const decodedToken = jwt.verify(token, secretKey) as { person_id: number; username: string; };
     return decodedToken;
 }
