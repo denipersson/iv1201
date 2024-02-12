@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
 import jwt from 'jsonwebtoken';
+import { getUserFromToken } from './token';
 
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -111,5 +112,6 @@ export const validateCompetencyAdd = async (req: Request, res: Response, next: N
         next(error); // Pass errors to the error-handling middleware
     }
 };
+
 
 
