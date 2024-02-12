@@ -97,7 +97,6 @@ export const validateCompetencyAdd = async (req: Request, res: Response, next: N
     }
 
     // Additional validations can be added here, maybe yearsOfExperience is number?
-    // Do we need to check so the user is logged in or should we assume when the user is here they are logged in?
 
     try {
         const person = await findPersonByUsername(requestedUsername);

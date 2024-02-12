@@ -1,21 +1,4 @@
 import { query } from '../config/database';
-import { User } from '../model/User';
-
-
-export const addCompetency = async ( user: User, competency: string) => {
-    const sql = `INSERT INTO public.competency (name) VALUES ($1) RETURNING id;`;
-    const params = [competency];
-
-    try {
-        const result = await query(sql, params);
-        const competencyId = result.rows[0].id;
-
-        const linkSql = `INSERT INTO public.person_competency (person_id, competency_id) VALUES ($1, $2);`;
-        await query(linkSql, [user.person_id, competencyId]);
-    } catch (err) {
-        throw err;
-    }
-};
 
     // Check if the the competency exists, else create a new competenceId for the new competency. 
     // This function is not case sensitive. So there will be two new id´s for "a" and "A"
@@ -61,8 +44,7 @@ export const getCompetenciesForPersonByUsername = async (username: string) =>{
     `;
 
     const params = [username];
-   
-
+    
     try {
         const result = await query(sql, params);
         console.log("Accessing " + username + " competence\n");
