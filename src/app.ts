@@ -22,8 +22,10 @@ app.use(express.json());
 app.post('/register', validateRegistration, registerPerson);
 app.post('/login', validateLogin, loginPerson);
 app.get('/getApplicants', validateAdmin, getApplicants);
-app.post('/addCompetencyToPerson', validateCompetencyAdd, addCompetencyToPerson);
-app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies); // add anoter validate
+app.post('/addCompetencyToPerson',validateAdminOrOwner, validateCompetencyAdd, addCompetencyToPerson);
+app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies); 
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
