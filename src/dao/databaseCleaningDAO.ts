@@ -16,7 +16,7 @@ export const findUsersWithBadData = async (): Promise<User[]> => {
         sql = `SELECT * FROM public.person WHERE email IS NULL OR email = '';`;
         const usersWithoutUsernames = await query(sql);
 
-        // Combine the two arrays
+        // Combine the threee arrays
         const users = [...usersWithBadPassword.rows, ...usersWithoutEmail.rows, ...usersWithoutUsernames.rows];
 
         return users;
