@@ -32,7 +32,8 @@ export const findPersonByUsername = async (username: string): Promise<User | nul
             // Directly use the result to create a User instance
             //const user = new User(result); //uses the "USER" class, hence we can use that in future.
             //for some reason addCompentecy does not work when having "const user = new User(result)"
-            const user: User = result.rows[0];
+            const user: User = await User.createWithCompetencies(result);
+            console.log("test2");
             return user;
         }
         return null;
@@ -51,7 +52,8 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
         if (result.rows.length) {
             // Directly use the esult to create a User instance
            // result.rows[0].competencies = getCompetenciesForPersonUsingPID(result.rows[0].pnr);
-            const user = new User(result); // Here, ensuring `result` fits the User constructor expectation
+           const user: User = await User.createWithCompetencies(result);
+           console.log(   "User: " + user.name + " " + user.surname + " " + user.competencies);
             return user;
         }
         return null;
@@ -61,15 +63,18 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
 };
 
 //find persons where role ID is 2, put them into an array of type User and return it
-export const findApplicants = async () => {
+export const getApplicantsDAO = async () => {
   const sql = `SELECT * FROM public.person WHERE role_id = 2;`;
 
   try {
+          // put into aray of users:6
+        //this fetches everyone and their competencies. 
       const result = await query(sql);
-
-      // put into aray of users:
-      const applicants: User[] = result.rows;
-      return applicants;
+        const applicants: User[] = await Promise.all(result.rows.map(async (row) => {
+            const user = await User.createWithCompetencies(row);
+            return user;
+        }));
+        return applicants;
   } catch (err) {
       throw err;
   }

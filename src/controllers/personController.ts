@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createPerson, findApplicants } from '../dao/personDAO'; 
+import { createPerson, getApplicantsDAO } from '../dao/personDAO'; 
 import { User, sanitizeUser as sanitizeUsers } from '../model/User';
 import { createToken } from '../middleware/token';
 
@@ -41,7 +41,7 @@ export const loginPerson = (req: Request, res: Response) => {
 
 export const getApplicants = async (req: Request, res: Response) => {
     try {
-        const applicants = await findApplicants();
+        const applicants = await getApplicantsDAO();
         for (let i = 0; i < applicants.length; i++) {
             applicants[i] = sanitizeUsers(applicants[i]);
         }

@@ -48,6 +48,7 @@ export const getCompetenciesForPersonByUsername = async (username: string) =>{
     try {
         const result = await query(sql, params);
         console.log("Accessing " + username + " competence\n");
+        console.log(result.rows);
         return result.rows; 
     } catch (err) {
         throw err;
