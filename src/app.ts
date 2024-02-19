@@ -2,8 +2,10 @@ import express, { Application } from 'express';
 import { getApplicants, loginPerson, registerPerson } from './controllers/personController';
 import {getCompetencies, addCompetencyToPerson } from './controllers/competenceController'
 import { validateCompetencyAdd, validateLogin, validateRegistration } from './middleware/validate';
+import { getUsersWithBadData } from './controllers/dbCleaningController';
 import * as dotenv from 'dotenv';
 import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin';
+
 
 const cors = require('cors');
 
@@ -25,9 +27,9 @@ app.get('/getApplicants', validateAdmin, getApplicants);
 app.post('/addCompetencyToPerson',validateAdminOrOwner, validateCompetencyAdd, addCompetencyToPerson);
 app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies); 
 
-
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server running on http://localhost:${PORT}`);
+
+    await getUsersWithBadData('unencrypted'); // can be: password, unencrypted, email, username
 });
