@@ -21,32 +21,19 @@ export class User {
      * 
      * @param result 
      */
-    constructor(result: any){
-        this.person_id = -1;
-        this.name = "";
-        this.surname = "";
-        this.email = "";
-        this.password = "";
+    constructor(person_id : number, name: string, surname: string, email: string, password: string, pnr: string, role_id: number, username: string) {
+        this.person_id = person_id;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
         this.competencies = [];
-        this.pnr = "";
-        this.role_id = -1;
-        this.username = "";
-        try{
-        const row = result.rows[0];
-        this.name = row.name;
-        this.surname = row.surname;
-        this.email = row.email;
-        //competencies måste dealas med seperat då de inte kommer finnas i user. 
-        this.pnr = row.pnr;
-        this.username = row.username;
-        this.password = row.password;
-        this.person_id = row.person_id;
-        this.role_id = row.role_id;
-        }
-        catch(err){
-            console.log("Error in constructor: " + err);
-        }
+        this.pnr = pnr;
+        this.role_id = role_id;
+        this.username = username;
     }
+
+    /* BROKEN
     static async createWithCompetencies(row: any): Promise<User> {
         const user = new User(row);
         try {
@@ -59,8 +46,9 @@ export class User {
             throw err;
         }
         return user;
-    }
-}
+    }*/
+} 
+
 
 // Set User's password to '' when sending it to the client
 export const sanitizeUser = (user: User): User => {
