@@ -1,4 +1,4 @@
-import { getCompetenciesForPersonByUsername } from "../dao/CompetenceDAO";
+import { getCompetenciesForPersonByEmail, getCompetenciesForPersonByUsername } from "../dao/CompetenceDAO";
 
 // User.ts
 export class User {
@@ -6,8 +6,8 @@ export class User {
     name: string;
     surname: string;
     email: string;
+    compentencies: any;
     password: string;
-    competencies: Array<string>;
     pnr: string;
     role_id: number;
     username: string;
@@ -27,33 +27,55 @@ export class User {
         this.surname = "";
         this.email = "";
         this.password = "";
-        this.competencies = [];
         this.pnr = "";
         this.role_id = -1;
         this.username = "";
-        try{
-        const row = result.rows[0];
-        this.name = row.name;
-        this.surname = row.surname;
-        this.email = row.email;
-        //competencies måste dealas med seperat då de inte kommer finnas i user. 
-        this.pnr = row.pnr;
-        this.username = row.username;
-        this.password = row.password;
-        this.person_id = row.person_id;
-        this.role_id = row.role_id;
-        }
-        catch(err){
-            console.log("Error in constructor: " + err);
+        this.compentencies = [];
+        try {
+            const row = result.rows[0];
+            if (!row.name || !row.surname || !row.email || !row.pnr || !row.username || !row.password || !row.person_id || !row.role_id) {
+                throw new Error("Missing required fields. Skipping this person.");
+            }
+            this.name = row.name;
+            this.surname = row.surname;
+            this.email = row.email;
+            this.pnr = row.pnr;
+            this.username = row.username;
+            this.password = row.password;
+            this.person_id = row.person_id;
+            this.role_id = row.role_id;
+        } catch (err) {
+            console.error('Error creating user:' + result.rows[0], err);
+            throw err;
         }
     }
-    static async createWithCompetencies(row: any): Promise<User> {
-        const user = new User(row);
+    /**DEPRECATED
+     * 
+     * @param result 
+     * @returns 
+     */
+    static async createWithCompetencies(result: any): Promise<User> {
+        //console.log(result);
+        if(result == null || result.rows == null){ throw new Error("Missing data. Skipping this person."); }
+    
+        const user = new User(result);
+        //console.log("Creating user with competencies" + user.username + " " + user.competencies);
         try {
-            const r = await getCompetenciesForPersonByUsername(row.username);
-            user.competencies = r;
+            if(user.username === undefined || user.username === null || user.username === "") {
+                console.log("No username found, trying to find by email");
+            }
+            if(user.username !== undefined && user.username !== null && user.username !== "") {
+                const r = await getCompetenciesForPersonByUsername(user.username);
+                user.compentencies = r;
 
-            ///console.log("Competencies:", user.competencies);
+            }else if(user.email !== undefined && user.email !== null && user.email !== ""){
+                const r = await getCompetenciesForPersonByEmail(user.email);
+                user.compentencies = r;
+            }
+
+            if(user.compentencies.length !== 0){
+            console.log("Competencies:", user.compentencies);
+            }
         } catch (err) {
             console.error('Error resolving competencies:', err);
             throw err;

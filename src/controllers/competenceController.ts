@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { findOrCreateCompetence, getCompetenciesForPersonByUsername, insertCompetenceToPerson } from '../dao/CompetenceDAO'
+import { findOrCreateCompetence, getCompetenciesForPersonByEmail, getCompetenciesForPersonByUsername, insertCompetenceToPerson } from '../dao/CompetenceDAO'
+import { userInfo } from 'os';
 
 
 export const addCompetencyToPerson = async (req: Request, res: Response) => {
@@ -27,11 +28,21 @@ export const addCompetencyToPerson = async (req: Request, res: Response) => {
  * @param res 
  */
 export const getCompetencies = async (req: Request, res: Response) => {
-    const { requestedUsername } = req.body;
-   
+    const { requestedUsername, email } = req.body;
+    console.log(requestedUsername +  "\n" + email);
     try {
-        const compentencies = await getCompetenciesForPersonByUsername(requestedUsername);
-        res.status(200).json(compentencies);
+        if(requestedUsername === undefined && email === undefined){
+            throw new Error("No username or email provided");
+        }
+        if(requestedUsername !== undefined){
+            const compentencies = await getCompetenciesForPersonByUsername(requestedUsername);
+            res.status(200).json(compentencies);
+        }
+        else if(email !== undefined){
+            const compentencies = await getCompetenciesForPersonByEmail(email);
+            res.status(200).json(compentencies);
+        }
+    
     } catch (error) {
         console.error('Error during applicant retrieval:', error);
         res.status(500).json('An error occurred during applicant retrieval');

@@ -32,6 +32,7 @@ export const loginPerson = (req: Request, res: Response) => {
         const secretKey = process.env.JWT_SECRET as string;
         const token = createToken(user);
 
+        sanitizeUsers(user);
         // Send the token in the response
         res.status(200).json({ message: "Login successful", user: user, token: token });
     } else {

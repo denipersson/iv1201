@@ -1,6 +1,7 @@
 import { query } from '../config/database';
 import bcrypt from 'bcrypt';
 import { User } from '../model/User';
+import { getCompetenciesForPersonByUsername } from './CompetenceDAO';
 
 export const createPerson = async (name: string, surname: string, pnr: string, email: string, rawPassword: string, roleId: number, username: string) => {
     const saltRounds = 10;
@@ -53,7 +54,7 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
             // Directly use the esult to create a User instance
            // result.rows[0].competencies = getCompetenciesForPersonUsingPID(result.rows[0].pnr);
            const user: User = await User.createWithCompetencies(result);
-           console.log(   "User: " + user.name + " " + user.surname + " " + user.competencies);
+           console.log(   "User: " + user.name + " " + user.surname + " " + user.compentencies);
             return user;
         }
         return null;
@@ -67,19 +68,20 @@ export const getApplicantsDAO = async () => {
   const sql = `SELECT * FROM public.person WHERE role_id = 2;`;
 
   try {
-          // put into aray of users:6
-        //this fetches everyone and their competencies. 
+        //this fetches everyone and their competencies. ONLY IF THEY HAVE A USERNAME
       const result = await query(sql);
-        const applicants: User[] = await Promise.all(result.rows.map(async (row) => {
-            const user = await User.createWithCompetencies(row);
-            return user;
-        }));
-        return applicants;
-  } catch (err) {
-      throw err;
-  }
-};
-
-
-
-
+      let applicants: User[] = [];
+        for (let i = 0; i < result.rows.length; i++) {
+            try{
+                console.log("Creating user without competencies. " + result.rows[i].username + " " + result.rows[i].email + " " + result.rows[i].person_id + " " + result.rows[i].role_id);
+                applicants[i] = new User(result.rows[i]);
+                applicants[i].compentencies = await getCompetenciesForPersonByUsername(applicants[i].username);
+                console.log("Competencies: " + applicants[i].compentencies);
+            }catch(err){  console.error("Error in getApplicantsDAO: " + err);
+             }
+          }
+          console.log(applicants);
+          return applicants;
+        }catch (err) {throw err;
+    }
+}
