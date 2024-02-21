@@ -85,8 +85,9 @@ export class User {
             throw err;
         }
         return user;
-    }
-}
+    }*/
+} 
+
 
 // Set User's password to '' when sending it to the client
 export const sanitizeUser = (user: User): User => {
