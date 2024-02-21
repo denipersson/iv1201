@@ -6,7 +6,7 @@ export class User {
     name: string;
     surname: string;
     email: string;
-    compentencies: any;
+    competencies: any;
     password: string;
     pnr: string;
     role_id: number;
@@ -30,7 +30,7 @@ export class User {
         this.pnr = "";
         this.role_id = -1;
         this.username = "";
-        this.compentencies = [];
+        this.competencies = [];
         try {
             if (!row.username) {
                 this.username = row.name.toLowerCase() + "." + row.surname.toLowerCase();
@@ -71,14 +71,14 @@ export class User {
             }
             if(user.username !== undefined && user.username !== null && user.username !== "") {
                 const r = await getCompetenciesForPersonByUsername(user.username);
-                user.compentencies = r;
+                user.competencies = r;
 
             }else if(user.email !== undefined && user.email !== null && user.email !== ""){
                 const r = await getCompetenciesForPersonByEmail(user.email);
-                user.compentencies = r;
+                user.competencies = r;
             }
 
-            if(user.compentencies.length !== 0){
+            if(user.competencies.length !== 0){
             }
         } catch (err) {
             console.error('Error resolving competencies:', err);

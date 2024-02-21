@@ -79,7 +79,7 @@ export const getApplicantsDAO = async () => {
                 applicants[i] = new User(result.rows[i]);
                 console.log("Adding comptencies to user: " + applicants[i].username);
                 applicants[i].password = "-censored-";
-                applicants[i].compentencies = await getCompetenciesForPersonByUsername(applicants[i].username);
+                applicants[i].competencies = await getCompetenciesForPersonByUsername(applicants[i].username);
                 //console.log("Competencies: " + applicants[i].compentencies);
             }catch(err){  console.error("Error in getApplicantsDAO: " + err);
              }
