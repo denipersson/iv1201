@@ -29,7 +29,7 @@ export const addCompetencyToPerson = async (req: Request, res: Response) => {
  */
 export const getCompetencies = async (req: Request, res: Response) => {
     const { requestedUsername, email } = req.body;
-    console.log(requestedUsername +  "\n" + email);
+    //console.log(requestedUsername +  "\n" + email);
     try {
         if(requestedUsername === undefined && email === undefined){
             throw new Error("No username or email provided");

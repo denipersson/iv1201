@@ -33,7 +33,8 @@ export const findPersonByUsername = async (username: string): Promise<User | nul
             // Directly use the result to create a User instance
             //const user = new User(result); //uses the "USER" class, hence we can use that in future.
             //for some reason addCompentecy does not work when having "const user = new User(result)"
-            const user: User = await User.createWithCompetencies(result);
+            //console.log(result);
+            const user: User = new User(result.rows[0]);
             return user;
         }
         return null;
@@ -53,7 +54,7 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
         if (result.rows.length) {
             // Directly use the esult to create a User instance
            // result.rows[0].competencies = getCompetenciesForPersonUsingPID(result.rows[0].pnr);
-           const user: User = await User.createWithCompetencies(result);
+           const user: User = new User(result.rows[0]);
            //console.log(   "User: " + user.name + " " + user.surname + " " + user.compentencies);
             return user;
         }
@@ -77,6 +78,7 @@ export const getApplicantsDAO = async () => {
                 //console.log("Creating user without competencies. " + result.rows[i].username + " " + result.rows[i].email + " " + result.rows[i].person_id + " " + result.rows[i].role_id);
                 applicants[i] = new User(result.rows[i]);
                 console.log("Adding comptencies to user: " + applicants[i].username);
+                applicants[i].password = "-censored-";
                 applicants[i].compentencies = await getCompetenciesForPersonByUsername(applicants[i].username);
                 //console.log("Competencies: " + applicants[i].compentencies);
             }catch(err){  console.error("Error in getApplicantsDAO: " + err);

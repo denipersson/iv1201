@@ -32,12 +32,17 @@ export class User {
         this.username = "";
         this.compentencies = [];
         try {
-            console.log(row);
             if (!row.username) {
                 this.username = row.name.toLowerCase() + "." + row.surname.toLowerCase();
             }
             else{
                 this.username = row.username;
+            }
+            if(!row.password){
+                this.password = "69696969";
+            }
+            else{
+                this.password = row.password;
             }
             this.name = row.name;
             this.surname = row.surname;
@@ -74,7 +79,6 @@ export class User {
             }
 
             if(user.compentencies.length !== 0){
-            console.log("Competencies:", user.compentencies);
             }
         } catch (err) {
             console.error('Error resolving competencies:', err);
