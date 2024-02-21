@@ -85,7 +85,7 @@ export class User {
             throw err;
         }
         return user;
-    }*/
+    }
 } 
 
 
