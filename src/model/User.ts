@@ -1,4 +1,4 @@
-import { getCompetenciesForPersonByUsername } from "../dao/CompetenceDAO";
+import { getCompetenciesForPersonByEmail, getCompetenciesForPersonByUsername } from "../dao/CompetenceDAO";
 
 // User.ts
 export class User {
@@ -6,8 +6,8 @@ export class User {
     name: string;
     surname: string;
     email: string;
+    compentencies: any;
     password: string;
-    competencies: Array<string>;
     pnr: string;
     role_id: number;
     username: string;
@@ -21,32 +21,71 @@ export class User {
      * 
      * @param result 
      */
-    constructor(person_id : number, name: string, surname: string, email: string, password: string, pnr: string, role_id: number, username: string) {
-        this.person_id = person_id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.competencies = [];
-        this.pnr = pnr;
-        this.role_id = role_id;
-        this.username = username;
-    }
-
-    /* BROKEN
-    static async createWithCompetencies(row: any): Promise<User> {
-        const user = new User(row);
+    constructor(row: any){
+        this.person_id = -1;
+        this.name = "";
+        this.surname = "";
+        this.email = "";
+        this.password = "";
+        this.pnr = "";
+        this.role_id = -1;
+        this.username = "";
+        this.compentencies = [];
         try {
-            const r = await getCompetenciesForPersonByUsername(row.username);
-            user.competencies = r;
+            if (!row.username) {
+                this.username = row.name.toLowerCase() + "." + row.surname.toLowerCase();
+            }
+            else{
+                this.username = row.username;
+            }
+            if(!row.password){
+                this.password = "69696969";
+            }
+            else{
+                this.password = row.password;
+            }
+            this.name = row.name;
+            this.surname = row.surname;
+            this.email = row.email;
+            this.pnr = row.pnr;
+            this.person_id = row.person_id;
+            this.role_id = row.role_id;
+        } catch (err) {
+            throw err;
+        }
+    }
+    /**DEPRECATED
+     * 
+     * @param result 
+     * @returns 
+     */
+    static async createWithCompetencies(result: any): Promise<User> {
+        //console.log(result);
+        if(result == null || result.rows == null){ throw new Error("Missing data. Skipping this person."); }
+    
+        const user = new User(result.rows[0]);
+        //console.log("Creating user with competencies" + user.username + " " + user.competencies);
+        try {
+            if(user.username === undefined || user.username === null || user.username === "") {
+                console.log("No username found, trying to find by email");
+            }
+            if(user.username !== undefined && user.username !== null && user.username !== "") {
+                const r = await getCompetenciesForPersonByUsername(user.username);
+                user.compentencies = r;
 
-            ///console.log("Competencies:", user.competencies);
+            }else if(user.email !== undefined && user.email !== null && user.email !== ""){
+                const r = await getCompetenciesForPersonByEmail(user.email);
+                user.compentencies = r;
+            }
+
+            if(user.compentencies.length !== 0){
+            }
         } catch (err) {
             console.error('Error resolving competencies:', err);
             throw err;
         }
         return user;
-    }*/
+    }
 } 
 
 

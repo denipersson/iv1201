@@ -47,8 +47,46 @@ export const getCompetenciesForPersonByUsername = async (username: string) =>{
     
     try {
         const result = await query(sql, params);
-        console.log("Accessing " + username + " competence\n");
-        console.log(result.rows);
+        //console.log("Accessing " + username + " competence\n");
+        //console.log(result.rows);
+        return result.rows; 
+    } catch (err) {
+        throw err;
+    }
+}
+export const getCompetenciesForPersonByEmail = async (email: string) => {
+    const sql = `
+    SELECT p.email, c.name AS competency_name, cp.years_of_experience
+    FROM person p
+    JOIN competence_profile cp ON p.person_id = cp.person_id
+    JOIN competence c ON cp.competence_id = c.competence_id  
+    WHERE p.email = $1;
+    `;
+
+    const params = [email];
+    
+    try {
+        const result = await query(sql, params);
+        //console.log("Accessing " + email + " competence\n");
+        //console.log(result.rows);
+        return result.rows; 
+    } catch (err) {
+        throw err;
+    }
+}
+export const getCompetenciesForPersonById = async (personId: number) => {
+    const sql = `
+    SELECT p.person_id, c.name AS competency_name, cp.years_of_experience
+    FROM person p
+    JOIN competence_profile cp ON p.person_id = cp.person_id
+    JOIN competence c ON cp.competence_id = c.competence_id  
+    WHERE p.person_id = $1;
+    `;
+
+    const params = [personId];
+    
+    try {
+        const result = await query(sql, params);
         return result.rows; 
     } catch (err) {
         throw err;
