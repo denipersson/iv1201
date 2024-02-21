@@ -56,7 +56,6 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
 
     try {
         const person = await findPersonByUsername(username);
-        console.log("test");
         if (!person) {
             return next(new Error('User not found'));
            // return res.status(404).json({ message:  });

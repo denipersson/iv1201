@@ -42,10 +42,12 @@ export const loginPerson = (req: Request, res: Response) => {
 
 export const getApplicants = async (req: Request, res: Response) => {
     try {
-        const applicants = await getApplicantsDAO();
+        let applicants: User[] = await getApplicantsDAO() as User[];
+
         for (let i = 0; i < applicants.length; i++) {
             applicants[i] = sanitizeUsers(applicants[i]);
         }
+
         res.status(200).json(applicants);
     } catch (error) {
         console.error('Error during applicant retrieval:', error);

@@ -34,7 +34,6 @@ export const findPersonByUsername = async (username: string): Promise<User | nul
             //const user = new User(result); //uses the "USER" class, hence we can use that in future.
             //for some reason addCompentecy does not work when having "const user = new User(result)"
             const user: User = await User.createWithCompetencies(result);
-            console.log("test2");
             return user;
         }
         return null;
@@ -50,11 +49,12 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
 
     try {
         const result = await query(sql, params);
+        //console.log(result.rows)
         if (result.rows.length) {
             // Directly use the esult to create a User instance
            // result.rows[0].competencies = getCompetenciesForPersonUsingPID(result.rows[0].pnr);
            const user: User = await User.createWithCompetencies(result);
-           console.log(   "User: " + user.name + " " + user.surname + " " + user.compentencies);
+           //console.log(   "User: " + user.name + " " + user.surname + " " + user.compentencies);
             return user;
         }
         return null;
@@ -70,18 +70,20 @@ export const getApplicantsDAO = async () => {
   try {
         //this fetches everyone and their competencies. ONLY IF THEY HAVE A USERNAME
       const result = await query(sql);
+      //console.log(result.rows);
       let applicants: User[] = [];
         for (let i = 0; i < result.rows.length; i++) {
             try{
-                console.log("Creating user without competencies. " + result.rows[i].username + " " + result.rows[i].email + " " + result.rows[i].person_id + " " + result.rows[i].role_id);
+                //console.log("Creating user without competencies. " + result.rows[i].username + " " + result.rows[i].email + " " + result.rows[i].person_id + " " + result.rows[i].role_id);
                 applicants[i] = new User(result.rows[i]);
+                console.log("Adding comptencies to user: " + applicants[i].username);
                 applicants[i].compentencies = await getCompetenciesForPersonByUsername(applicants[i].username);
-                console.log("Competencies: " + applicants[i].compentencies);
+                //console.log("Competencies: " + applicants[i].compentencies);
             }catch(err){  console.error("Error in getApplicantsDAO: " + err);
              }
           }
-          console.log(applicants);
+          //console.log(applicants);
           return applicants;
-        }catch (err) {throw err;
+        }catch (err) {//throw err;
     }
 }

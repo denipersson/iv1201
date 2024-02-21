@@ -21,7 +21,7 @@ export class User {
      * 
      * @param result 
      */
-    constructor(result: any){
+    constructor(row: any){
         this.person_id = -1;
         this.name = "";
         this.surname = "";
@@ -32,20 +32,20 @@ export class User {
         this.username = "";
         this.compentencies = [];
         try {
-            const row = result.rows[0];
-            if (!row.name || !row.surname || !row.email || !row.pnr || !row.username || !row.password || !row.person_id || !row.role_id) {
-                throw new Error("Missing required fields. Skipping this person.");
+            console.log(row);
+            if (!row.username) {
+                this.username = row.name.toLowerCase() + "." + row.surname.toLowerCase();
+            }
+            else{
+                this.username = row.username;
             }
             this.name = row.name;
             this.surname = row.surname;
             this.email = row.email;
             this.pnr = row.pnr;
-            this.username = row.username;
-            this.password = row.password;
             this.person_id = row.person_id;
             this.role_id = row.role_id;
         } catch (err) {
-            console.error('Error creating user:' + result.rows[0], err);
             throw err;
         }
     }
@@ -58,7 +58,7 @@ export class User {
         //console.log(result);
         if(result == null || result.rows == null){ throw new Error("Missing data. Skipping this person."); }
     
-        const user = new User(result);
+        const user = new User(result.rows[0]);
         //console.log("Creating user with competencies" + user.username + " " + user.competencies);
         try {
             if(user.username === undefined || user.username === null || user.username === "") {
