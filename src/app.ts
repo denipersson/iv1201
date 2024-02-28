@@ -7,6 +7,9 @@ import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin'
 
 const cors = require('cors');
 
+/**
+ * The main application file for the backend.
+ */
 // getCompetencies  addCompetencyToPerson
 const corsOptions = {
   origin: 'http://localhost:3001', // This should match the domain of your frontend application

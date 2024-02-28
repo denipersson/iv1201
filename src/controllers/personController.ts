@@ -3,6 +3,12 @@ import { createPerson, getApplicantsDAO } from '../dao/personDAO';
 import { User, sanitizeUser as sanitizeUsers } from '../model/User';
 import { createToken } from '../middleware/token';
 
+/**
+ * Register a new person in the database.
+ * 
+ * @param req - The request from the frontend
+ * @param res - The resoponse from the database
+ */
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
 
@@ -25,6 +31,12 @@ export const registerPerson = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Login a person.
+ * 
+ * @param req - The request from the frontend
+ * @param res - The resoponse from the database
+ */
 export const loginPerson = (req: Request, res: Response) => {
     const user: User = res.locals.user;
     if (user) {
@@ -40,6 +52,12 @@ export const loginPerson = (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Get all applicants.
+ * 
+ * @param req - The request from the frontend
+ * @param res - The resoponse from the database
+ */
 export const getApplicants = async (req: Request, res: Response) => {
     try {
         let applicants: User[] = await getApplicantsDAO() as User[];

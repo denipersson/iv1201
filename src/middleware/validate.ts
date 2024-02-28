@@ -4,6 +4,14 @@ import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
 import jwt from 'jsonwebtoken';
 import { getUserFromToken } from './token';
 
+/**
+ * Validate the registration input. This middleware will check if all required fields are present, and if the email and username are unique.
+ * 
+ * @param req - Request from the frontend
+ * @param res - Response to the frontend
+ * @param next - The next middleware which is the registerPerson controller
+ * @returns - Error message if a validation fails
+ */
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
 
@@ -47,6 +55,14 @@ export const validateRegistration = async (req: Request, res: Response, next: Ne
     }
 };
 
+/**
+ * Validate the login input. This middleware will check if all required fields are present, and if the username and password are valid.
+ * 
+ * @param req - Request from the frontend
+ * @param res - Response to the frontend
+ * @param next - The next middleware which is the loginPerson controller
+ * @returns - Error message if a validation fails
+ */
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
 
@@ -77,7 +93,12 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-// Function to validate a token - this will be used in a middleware to protect routes that require a valid session
+/**
+ * Function to validate a token - this will be used in a middleware to protect routes that require a valid session.
+ * 
+ * @param token - The token to validate
+ * @returns - If the token is valid
+ */
 export const validateToken = (token: string): { valid: boolean; decoded?: any } => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
@@ -87,6 +108,14 @@ export const validateToken = (token: string): { valid: boolean; decoded?: any } 
   }
 };
 
+/**
+ * Validate the addition of a new comeptency. This middleware will check if all required fields are pressent and if the person exists in the database.
+ * 
+ * @param req - Request from the frontend
+ * @param res - Response to the frontend
+ * @param next - The next middleware
+ * @returns - Error message if a validation fails
+ */
 export const validateCompetencyAdd = async (req: Request, res: Response, next: NextFunction) => {
     const { requestedUsername, competencyName, yearsOfExperience } = req.body;
 

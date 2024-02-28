@@ -9,7 +9,13 @@ const pool = new Pool({
   port: 5432,
 });
 
-
+/**
+ * Connect to the database and run a query.
+ * 
+ * @param text - The query to run
+ * @param params - The parameters to pass to the query
+ * @returns - The result of the query
+ */
 export const query = async (text: string, params?: any[]) => {
   const client = await pool.connect();
   try {

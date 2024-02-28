@@ -1,7 +1,13 @@
 import { query } from '../config/database';
 
-    // Check if the the competency exists, else create a new competenceId for the new competency. 
-    // This function is not case sensitive. So there will be two new id´s for "a" and "A"
+
+/**
+ * Check if the the competency exists, else create a new competenceId for the new competency.
+ * This function is not case sensitive. So there will be two new id´s for "a" and "A".
+ * 
+ * @param name  - The name of the competency
+ * @returns - The competency
+ */
 export const findOrCreateCompetence = async (name: string) => {
     let sql = `SELECT competence_id FROM public.competence WHERE name = $1;`;
     let params = [name];
@@ -17,6 +23,14 @@ export const findOrCreateCompetence = async (name: string) => {
     }
 };
 
+/**
+ * Inserts the comptence to the person.
+ * 
+ * @param personId - The persons personID
+ * @param competenceId - The competence
+ * @param yearsOfExperience - Years of experience with the competence
+ * @returns
+ */
 export const insertCompetenceToPerson = async (personId: number, competenceId: number, yearsOfExperience: number) => {
     const sql = `
     INSERT INTO public.competence_profile (person_id, competence_id, years_of_experience)
@@ -33,7 +47,12 @@ export const insertCompetenceToPerson = async (personId: number, competenceId: n
     }
 };
 
-
+/**
+ * Gets a persons competencies from their username.
+ * 
+ * @param username - The persons username
+ * @returns - The comptencies
+ */
 export const getCompetenciesForPersonByUsername = async (username: string) =>{
     const sql = `
     SELECT p.username, c.name AS competency_name, cp.years_of_experience
@@ -54,6 +73,12 @@ export const getCompetenciesForPersonByUsername = async (username: string) =>{
         throw err;
     }
 }
+/**
+ * Gets a persons competencies from their email.
+ * 
+ * @param email - The persons email
+ * @returns - The comptencies
+ */
 export const getCompetenciesForPersonByEmail = async (email: string) => {
     const sql = `
     SELECT p.email, c.name AS competency_name, cp.years_of_experience
@@ -74,6 +99,12 @@ export const getCompetenciesForPersonByEmail = async (email: string) => {
         throw err;
     }
 }
+/**
+ * Gets a persons competencies from their personID.
+ * 
+ * @param personId - The persons personID
+ * @returns - The comptencies
+ */
 export const getCompetenciesForPersonById = async (personId: number) => {
     const sql = `
     SELECT p.person_id, c.name AS competency_name, cp.years_of_experience

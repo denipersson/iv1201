@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\config",
+    "\\src\\controllers",
+    "\\src\\dao",
+    "\\src\\middleware",
+    "\\src\\model"
+  ],
+  "SelectedNode": "\\src\\controllers\\personController.ts",
+  "PreviewInSolutionExplorer": false
+}

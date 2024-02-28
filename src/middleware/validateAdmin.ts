@@ -3,8 +3,14 @@ import { validateToken } from "./validate";
 import { findPersonByUsername } from '../dao/personDAO';
 import { getUserFromToken } from './token';
 
-// validate that the token is valid and also that the user is an admin
-
+/**
+ * Validate that the token is valid and also that the user is an admin.
+ * 
+ * @param req - Request from the frontend
+ * @param res - Response to the frontend
+ * @param next - The next middleware
+ * @returns - Error message if a validation fails
+ */
 export const validateAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const headers = req.headers;
 
@@ -40,6 +46,14 @@ export const validateAdmin = async (req: Request, res: Response, next: NextFunct
     });
 }
 
+/**
+ * Valdiate that the token is valid and that the user is an admin or the owner of the data.
+ * 
+ * @param req - Request from the frontend
+ * @param res - Response to the frontend
+ * @param next - The next middleware
+ * @returns - Error message if a validation fails
+ */
 export const validateAdminOrOwner = async (req: Request, res: Response, next: NextFunction) => {
     const headers = req.headers;
 

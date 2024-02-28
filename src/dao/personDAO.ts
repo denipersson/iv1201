@@ -3,6 +3,18 @@ import bcrypt from 'bcrypt';
 import { User } from '../model/User';
 import { getCompetenciesForPersonByUsername } from './CompetenceDAO';
 
+/**
+ * Create a new person in the database with the given parameters and return the person_id of the created person.
+ * 
+ * @param name
+ * @param surname
+ * @param pnr
+ * @param email
+ * @param rawPassword
+ * @param roleId
+ * @param username
+ * @returns
+ */
 export const createPerson = async (name: string, surname: string, pnr: string, email: string, rawPassword: string, roleId: number, username: string) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
@@ -22,7 +34,12 @@ export const createPerson = async (name: string, surname: string, pnr: string, e
     }
 };
 
-
+/**
+ * Finds a person in the database with the matching username and returns the user.
+ * 
+ * @param username - The persons username
+ * @returns - The matching person
+ */
 export const findPersonByUsername = async (username: string): Promise<User | null> => {
     const sql = `SELECT * FROM public.person WHERE username = $1;`;
     const params = [username];
@@ -43,7 +60,12 @@ export const findPersonByUsername = async (username: string): Promise<User | nul
     }
 };
 
-
+/**
+ * Finds a person in database with the matching email and returns the user.
+ * 
+ * @param email - The persons email
+ * @returns - The matching person
+ */
 export const findPersonByEmail = async (email: string): Promise<User | null> => {
     const sql = `SELECT * FROM public.person WHERE email = $1;`;
     const params = [email];
@@ -64,7 +86,11 @@ export const findPersonByEmail = async (email: string): Promise<User | null> => 
     }
 };
 
-//find persons where role ID is 2, put them into an array of type User and return it
+/**
+ * Find persons where role ID is 2, put them into an array of type User and return it.
+ * 
+ * @returns - persons with role 2
+ */
 export const getApplicantsDAO = async () => {
   const sql = `SELECT * FROM public.person WHERE role_id = 2;`;
 

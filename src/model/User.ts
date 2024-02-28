@@ -12,7 +12,12 @@ export class User {
     role_id: number;
     username: string;
 
-    //checks email, but needs to be done frontend too.
+    /**
+     * Checks if the email is valid.
+     * 
+     * @returns 
+     */
+    //checks email, but needs to be done frontend too
     private isValidEmail(): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(this.email);
@@ -90,6 +95,12 @@ export class User {
 
 
 // Set User's password to '' when sending it to the client
+/**
+ * Sanitize the user object by setting the password to ''.
+ * 
+ * @param user  - The user object
+ * @returns - The user without the password
+ */
 export const sanitizeUser = (user: User): User => {
     const sanitizedUser = user;
     sanitizedUser.password = '';

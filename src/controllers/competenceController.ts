@@ -2,7 +2,12 @@ import { Request, Response } from 'express';
 import { findOrCreateCompetence, getCompetenciesForPersonByEmail, getCompetenciesForPersonByUsername, insertCompetenceToPerson } from '../dao/CompetenceDAO'
 import { userInfo } from 'os';
 
-
+/**
+ * Controller for adding a competency to a person.
+ * 
+ * @param req - The request from the frontend
+ * @param res - The resoponse from the database
+ */
 export const addCompetencyToPerson = async (req: Request, res: Response) => {
     const { competencyName, yearsOfExperience } = req.body;
     const personId = res.locals.personId;
@@ -24,8 +29,9 @@ export const addCompetencyToPerson = async (req: Request, res: Response) => {
 };
 /**
  * Controller for getting all competencies of a specific PID.
- * @param req 
- * @param res 
+ * 
+ * @param req - The request from the frontend
+ * @param res - The resoponse from the database
  */
 export const getCompetencies = async (req: Request, res: Response) => {
     const { requestedUsername, email } = req.body;
