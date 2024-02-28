@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { createPerson, getApplicantsDAO } from '../dao/personDAO'; 
+import { createPerson } from '../dao/personDAO';
 import { User, sanitizeUser as sanitizeUsers } from '../model/User';
-import { createToken } from '../middleware/token';
+import { createToken } from '../helpers/token';
+
 
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -29,7 +30,6 @@ export const loginPerson = (req: Request, res: Response) => {
     const user: User = res.locals.user;
     if (user) {
         // Create token
-        const secretKey = process.env.JWT_SECRET as string;
         const token = createToken(user);
 
         sanitizeUsers(user);
@@ -39,24 +39,3 @@ export const loginPerson = (req: Request, res: Response) => {
         res.status(401).json({ message: "Login failed" });
     }
 };
-
-export const getApplicants = async (req: Request, res: Response) => {
-    try {
-        let applicants: User[] = await getApplicantsDAO() as User[];
-
-        for (let i = 0; i < applicants.length; i++) {
-            applicants[i] = sanitizeUsers(applicants[i]);
-        }
-
-        res.status(200).json(applicants);
-    } catch (error) {
-        console.error('Error during applicant retrieval:', error);
-        res.status(500).json('An error occurred during applicant retrieval');
-    }
-};
-
-
-
-
-
-

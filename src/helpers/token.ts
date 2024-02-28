@@ -15,3 +15,10 @@ export function getUserFromToken(token: string) {
     const decodedToken = jwt.verify(token, secretKey) as { person_id: number; username: string; };
     return decodedToken;
 }
+
+export function generatePasswordResetToken(user: User) {
+    const username = user.username;
+    const secretKey = process.env.JWT_SECRET as string;
+    const token = jwt.sign({ username }, secretKey, { expiresIn: '15m' });
+    return token;
+}
