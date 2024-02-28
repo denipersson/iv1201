@@ -8,15 +8,23 @@ export const addCompetencyToPerson = async (req: Request, res: Response) => {
     const personId = res.locals.personId;
 
     try {
-        const competenceId = await findOrCreateCompetence(competencyName);
-        const competencyProfile = await insertCompetenceToPerson(personId, competenceId, yearsOfExperience);
-        res.status(201).json({
-            message: 'Competency added successfully',
-            competencyProfileId: competencyProfile.competence_profile_id,
-            competenceName: competencyName, 
-            competenceId: competenceId,
-            personId: personId
-        });
+        if(competencyName == "ticket sales" || competencyName == "lotteries" || competencyName == "roller coaster operation"){
+            const competenceId = await findOrCreateCompetence(competencyName);
+            const competencyProfile = await insertCompetenceToPerson(personId, competenceId, yearsOfExperience);
+            res.status(201).json({
+                message: 'Competency added successfully',
+                competencyProfileId: competencyProfile.competence_profile_id,
+                competenceName: competencyName, 
+                competenceId: competenceId,
+                personId: personId
+            });
+        }
+        else{
+            res.status(400).json({
+                message: 'Competency not found. Needs to be ticket sales, lotteries or roller coaster operation.'
+            });
+        }
+        
     } catch (error) {
         console.error('Error adding competency to person:', error);
         res.status(500).json('An error occurred during adding comptency to person');
