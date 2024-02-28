@@ -43,6 +43,20 @@ export const findPersonByUsername = async (username: string): Promise<User | nul
     }
 };
 
+export const updatePersonPassword = async (username: string, newPassword: string) => {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    const sql = `UPDATE public.person SET password = $1 WHERE username = $2;`;
+    const params = [hashedPassword, username];
+
+    try {
+        await query(sql, params);
+    } catch (err) {
+        throw err;
+    }
+}
+
 
 export const findPersonByEmail = async (email: string): Promise<User | null> => {
     const sql = `SELECT * FROM public.person WHERE email = $1;`;

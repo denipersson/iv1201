@@ -1,7 +1,11 @@
 import express, { Application } from 'express';
-import { getApplicants, loginPerson, registerPerson } from './controllers/personController';
+import { getApplicants } from './controllers/applicantsController';
+import { loginPerson, registerPerson } from './controllers/authController';
+import { requestPasswordResetLink, resetPassword } from './controllers/resetPasswordController';
 import {getCompetencies, addCompetencyToPerson } from './controllers/competenceController'
-import { validateCompetencyAdd, validateLogin, validateRegistration } from './middleware/validate';
+import { validateLogin, validateRegistration } from './middleware/validateAuth';
+import { validateCompetencyAdd } from './middleware/validateCompetency';
+import { validatePasswordReset, validatePasswordResetLinkRequest } from './middleware/validatePasswordReset';
 import { getUsersWithBadData } from './controllers/dbCleaningController';
 import * as dotenv from 'dotenv';
 import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin';
@@ -26,6 +30,8 @@ app.post('/login', validateLogin, loginPerson);
 app.get('/getApplicants', validateAdmin, getApplicants);
 app.post('/addCompetencyToPerson',validateAdminOrOwner, validateCompetencyAdd, addCompetencyToPerson);
 app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies); 
+app.post('/resetPassword', validatePasswordReset, resetPassword);
+app.get('/requestPasswordResetLink', validatePasswordResetLinkRequest, requestPasswordResetLink)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
