@@ -92,7 +92,7 @@ export const validateCompetencyAdd = async (req: Request, res: Response, next: N
 
     // Basic validation for input presence
     if (!requestedUsername || !competencyName || yearsOfExperience === undefined) {
-        return res.status(400).json({ message: "Username, competency name, and years of experience are required" });
+        return res.status(400).json({ message: "requestedUsername, competencyName, and yearsOfExperienceare required" });
     }
 
     // Additional validations can be added here, maybe yearsOfExperience is number?
