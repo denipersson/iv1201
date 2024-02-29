@@ -9,6 +9,8 @@ import { validatePasswordReset, validatePasswordResetLinkRequest } from './middl
 import { getUsersWithBadData } from './controllers/dbCleaningController';
 import * as dotenv from 'dotenv';
 import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin';
+import { validateAvailabilityAdd } from './middleware/validateAvailability'
+import { addAvailability } from './controllers/availabilityController'
 
 
 const cors = require('cors');
@@ -31,7 +33,9 @@ app.get('/getApplicants', validateAdmin, getApplicants);
 app.post('/addCompetencyToPerson',validateAdminOrOwner, validateCompetencyAdd, addCompetencyToPerson);
 app.get('/getCompetencies', validateAdminOrOwner,  getCompetencies); 
 app.post('/resetPassword', validatePasswordReset, resetPassword);
-app.get('/requestPasswordResetLink', validatePasswordResetLinkRequest, requestPasswordResetLink)
+app.get('/requestPasswordResetLink', validatePasswordResetLinkRequest, requestPasswordResetLink);
+app.post('/addAvailability', validateAdminOrOwner, validateAvailabilityAdd,addAvailability);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
