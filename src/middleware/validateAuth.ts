@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
-import jwt from 'jsonwebtoken';
-import { getUserFromToken } from './token';
+
 
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
@@ -16,6 +15,7 @@ export const validateRegistration = async (req: Request, res: Response, next: Ne
     // Regular expression patterns for validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const pnrRegex = /^[0-9]{10,12}$/; // This pattern is a simple example, adjust according to your actual personal number format
+
 
     // Validate email format
     if (!emailRegex.test(email)) {
@@ -58,7 +58,7 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
         const person = await findPersonByUsername(username);
         if (!person) {
             return next(new Error('User not found'));
-           // return res.status(404).json({ message:  });
+            // return res.status(404).json({ message:  });
         }
 
         const passwordIsValid = await bcrypt.compare(password, person.password);
@@ -72,61 +72,7 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
 
         next();
     } catch (error) {
-       // console.error('Error during login validation:', error);
+        // console.error('Error during login validation:', error);
         res.status(500).json({ message: "An error occurred during login validation" });
-    }
-};
-
-// Function to validate a token - this will be used in a middleware to protect routes that require a valid session
-export const validateToken = (token: string): { valid: boolean; decoded?: any } => {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    return { valid: true, decoded };
-  } catch (error) {
-    return { valid: false };
-  }
-};
-
-export const validateCompetencyAdd = async (req: Request, res: Response, next: NextFunction) => {
-    const { requestedUsername, competencyName, yearsOfExperience } = req.body;
-
-    // Basic validation for input presence
-    if (!requestedUsername || !competencyName || yearsOfExperience === undefined) {
-        return res.status(400).json({ message: "Username, competency name, and years of experience are required" });
-    }
-
-    try {
-        const person = await findPersonByUsername(requestedUsername);
-        if (!person) {
-            return res.status(404).json({ message: 'Person not found' });
-        }
-
-        
-        res.locals.personId = person.person_id;
-        next();
-    } catch (error) {
-        next(error); // Pass errors to the error-handling middleware
-    }
-};
-
-export const validateAvailabilityAdd = async (req: Request, res: Response, next: NextFunction) => {
-    const { requestedUsername, fromDate, toDate } = req.body;
-
-    // Basic validation for input presence
-    if (!requestedUsername || !fromDate || toDate === undefined) {
-        return res.status(400).json({ message: "requestedUsername, fromDate, and toDate are required" });
-    }
-
-    try {
-        const person = await findPersonByUsername(requestedUsername);
-        if (!person) {
-            return res.status(404).json({ message: 'Person not found' });
-        }
-
-        
-        res.locals.personId = person.person_id;
-        next();
-    } catch (error) {
-        next(error); // Pass errors to the error-handling middleware
     }
 };

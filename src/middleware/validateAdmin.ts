@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { validateToken } from "./validate";
+import { validateToken } from "./validateToken";
 import { findPersonByUsername } from '../dao/personDAO';
-import { getUserFromToken } from './token';
+import { getUserFromToken } from '../helpers/token';
 
 // validate that the token is valid and also that the user is an admin
 
