@@ -1,7 +1,12 @@
+
 import bcrypt from 'bcrypt';
 import { User } from "../model/User";
 import { query } from '../config/database';
 
+/**
+ * Finds users with no password.
+ * @returns A promise that resolves to an array of User objects.
+ */
 export const findUsersWithNoPassword = async (): Promise<User[]> => {
     try {
         const sql = `SELECT *
@@ -15,6 +20,10 @@ export const findUsersWithNoPassword = async (): Promise<User[]> => {
     }
 };
 
+/**
+ * Finds users with unencrypted passwords.
+ * @returns A promise that resolves to an array of User objects.
+ */
 export const findUsersWithUnencryptedPassword = async (): Promise<User[]> => {
     try {
         const sql = `SELECT *
@@ -37,6 +46,10 @@ export const findUsersWithUnencryptedPassword = async (): Promise<User[]> => {
     }
 };
 
+/**
+ * Finds users without an email.
+ * @returns A promise that resolves to an array of User objects.
+ */
 export const findUsersWithoutEmail = async (): Promise<User[]> => {
     try {
         const sql = `SELECT * FROM public.person WHERE email IS NULL OR email = '';`;
@@ -48,6 +61,10 @@ export const findUsersWithoutEmail = async (): Promise<User[]> => {
     }
 };
 
+/**
+ * Finds users without a username.
+ * @returns A promise that resolves to an array of User objects.
+ */
 export const findUsersWithoutUsernames = async (): Promise<User[]> => {
     try {
         const sql = `SELECT * FROM public.person WHERE username IS NULL OR username = '';`;
@@ -59,50 +76,62 @@ export const findUsersWithoutUsernames = async (): Promise<User[]> => {
     }
 };
 
+/**
+ * Encrypts unencrypted passwords for a given array of users.
+ * @param users - An array of User objects.
+ */
 export const encryptUnencryptedPasswords = async (users: User[]) => {
     const saltRounds = 10; 
     for (const user of users) {
-        //console.log(user.password);
-        //console.log(user.person_id);
         const hashedPassword = await bcrypt.hash(user.password, saltRounds);
         // Update user password in the database
         const sql = `UPDATE public.person SET password = $1 WHERE person_id = $2`;
         await query(sql, [hashedPassword, user.person_id]);
     }
 };
+
+/**
+ * Sends emails to users without a username.
+ * @param users - An array of User objects.
+ */
 export const emailPeopleWithNoUsername = async (users: User[]) => {
     var i = 0;
     for(const user of users){
         if(user.email == null || user.email == ''){
-            //all users that dont have email have a username and a password. 
-            //we can temporarily apply a fake email- and ask em to change it on login. -e
+            // All users that don't have an email have a username and a password. 
+            // We can temporarily apply a fake email and ask them to change it on login.
         }
         else{
             // Send email to user
-            //console.log("Email sent to " + user.email + " with no username");
             i++;
         }
     }
     console.log(i + " emails sent to users with no username");
 }
-    export const emailPasswordResetLinks = async (users: User[]) => {
-        // send emails to all users without password- deal with it
-        var i = 0;
-        for(const user of users){
-            if(user.email == null || user.email == ''){
-                //all users that dont have email have a username and a password. 
-                //we can temporarily apply a fake email- and ask em to change it on login. -e
-            }
-            else{
-                // Send email to user
-                //console.log("Email sent to " + user.email + " with no password. Please reset ur password. ");
-                i++;
-            }
+
+/**
+ * Sends password reset emails to users without a password.
+ * @param users - An array of User objects.
+ */
+export const emailPasswordResetLinks = async (users: User[]) => {
+    var i = 0;
+    for(const user of users){
+        if(user.email == null || user.email == ''){
+            // All users that don't have an email have a username and a password. 
+            // We can temporarily apply a fake email and ask them to change it on login.
         }
-        console.log(i + " emails sent to users with no password");
-
+        else{
+            // Send email to user
+            i++;
+        }
     }
+    console.log(i + " emails sent to users with no password");
+}
 
+/**
+ * Finds people without an email and a username.
+ * @returns A promise that resolves to an array of User objects.
+ */
 export const findPeopleWithoutEmailAndUsername = async (): Promise<User[]> => {
     try {
         const sql = `SELECT *

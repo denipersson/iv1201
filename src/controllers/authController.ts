@@ -3,7 +3,12 @@ import { createPerson } from '../dao/personDAO';
 import { User, sanitizeUser as sanitizeUsers } from '../model/User';
 import { createToken } from '../helpers/token';
 
-
+/**
+ * Registers a new person.
+ * 
+ * @param req - The request object.
+ * @param res - The response object.
+ */
 export const registerPerson = async (req: Request, res: Response) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
 
@@ -26,6 +31,12 @@ export const registerPerson = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Logs in a person.
+ * 
+ * @param req - The request object.
+ * @param res - The response object.
+ */
 export const loginPerson = (req: Request, res: Response) => {
     const user: User = res.locals.user;
     if (user) {

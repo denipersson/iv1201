@@ -1,9 +1,15 @@
+
+
 import { Request, Response } from 'express';
 import { findPersonByEmail, updatePersonPassword } from '../dao/personDAO';
 import { generatePasswordResetToken, getUserFromToken } from '../helpers/token';
 import { Console } from 'console';
 
-
+/**
+ * Resets the password for a user.
+ * @param req - The request object.
+ * @param res - The response object.
+ */
 export const resetPassword = async (req: Request, res: Response) => {
     const { token, newPassword } = req.body;
     try {
@@ -16,6 +22,11 @@ export const resetPassword = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Sends a password reset link to the user's email.
+ * @param req - The request object.
+ * @param res - The response object.
+ */
 export const requestPasswordResetLink = async (req: Request, res: Response) => {
     const headers = req.headers;
     const email = headers['email'] as string;
