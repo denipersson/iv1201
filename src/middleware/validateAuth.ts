@@ -1,8 +1,14 @@
+
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { findPersonByEmail, findPersonByUsername } from '../dao/personDAO';
 
-
+/**
+ * Middleware function to validate user registration data.
+ * @param req - Express Request object.
+ * @param res - Express Response object.
+ * @param next - Express NextFunction object.
+ */
 export const validateRegistration = async (req: Request, res: Response, next: NextFunction) => {
     const { name, surname, pnr, email, password, role_id, username } = req.body;
 
@@ -15,7 +21,6 @@ export const validateRegistration = async (req: Request, res: Response, next: Ne
     // Regular expression patterns for validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const pnrRegex = /^[0-9]{10,12}$/; // This pattern is a simple example, adjust according to your actual personal number format
-
 
     // Validate email format
     if (!emailRegex.test(email)) {
@@ -47,6 +52,12 @@ export const validateRegistration = async (req: Request, res: Response, next: Ne
     }
 };
 
+/**
+ * Middleware function to validate user login data.
+ * @param req - Express Request object.
+ * @param res - Express Response object.
+ * @param next - Express NextFunction object.
+ */
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
 
@@ -58,21 +69,17 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
         const person = await findPersonByUsername(username);
         if (!person) {
             return next(new Error('User not found'));
-            // return res.status(404).json({ message:  });
         }
 
         const passwordIsValid = await bcrypt.compare(password, person.password);
         if (!passwordIsValid) {
             return next(new Error('Invalid credentials'));
-            //return res.status(401).json({ message: "Invalid credentials" });
         }
-
 
         res.locals.user = person;
 
         next();
     } catch (error) {
-        // console.error('Error during login validation:', error);
         res.status(500).json({ message: "An error occurred during login validation" });
     }
 };

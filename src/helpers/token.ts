@@ -1,7 +1,14 @@
+
+
 import jwt from "jsonwebtoken";
 import { User } from "../model/User";
 
-export function createToken(user: User) {
+/**
+ * Creates a JWT token for the given user.
+ * @param user - The user object.
+ * @returns The JWT token.
+ */
+export function createToken(user: User): string {
     const secretKey = process.env.JWT_SECRET as string;
     const token = jwt.sign(
         { person_id: user.person_id, username: user.username },
@@ -10,13 +17,24 @@ export function createToken(user: User) {
     );
     return token;
 }
-export function getUserFromToken(token: string) {
+
+/**
+ * Retrieves the user information from the given JWT token.
+ * @param token - The JWT token.
+ * @returns The decoded user information.
+ */
+export function getUserFromToken(token: string): { person_id: number; username: string; } {
     const secretKey = process.env.JWT_SECRET as string;
     const decodedToken = jwt.verify(token, secretKey) as { person_id: number; username: string; };
     return decodedToken;
 }
 
-export function generatePasswordResetToken(user: User) {
+/**
+ * Generates a JWT token for password reset for the given user.
+ * @param user - The user object.
+ * @returns The JWT token for password reset.
+ */
+export function generatePasswordResetToken(user: User): string {
     const username = user.username;
     const secretKey = process.env.JWT_SECRET as string;
     const token = jwt.sign({ username }, secretKey, { expiresIn: '15m' });

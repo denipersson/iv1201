@@ -6,7 +6,11 @@ import {
     insertCompetenceToPerson,
 } from '../dao/CompetenceDAO'
 
-
+/**
+ * Controller for adding a competency to a person.
+ * @param req The request object.
+ * @param res The response object.
+ */
 export const addCompetencyToPerson = async (req: Request, res: Response) => {
     const { competencyName, yearsOfExperience } = req.body;
     const personId = res.locals.personId;
