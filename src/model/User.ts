@@ -1,6 +1,8 @@
 import { getCompetenciesForPersonByEmail, getCompetenciesForPersonByUsername } from "../dao/CompetenceDAO";
 
-// User.ts
+/**
+ * Represents a User in the system.
+ */
 export class User {
     person_id: number;
     name: string;
@@ -12,16 +14,21 @@ export class User {
     role_id: number;
     username: string;
 
-    //checks email, but needs to be done frontend too.
+    /**
+     * Checks if the email is valid.
+     * @returns True if the email is valid, false otherwise.
+     */
     private isValidEmail(): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(this.email);
     }
-    /** Fetches a person without competencies. 
-     * 
-     * @param result 
+
+    /**
+     * Creates a new User instance.
+     * @param row - The data row containing user information.
      */
     constructor(row: any){
+        // Initialize properties
         this.person_id = -1;
         this.name = "";
         this.surname = "";
@@ -31,7 +38,9 @@ export class User {
         this.role_id = -1;
         this.username = "";
         this.competencies = [];
+
         try {
+            // Set properties from the data row
             if (!row.username) {
                 this.username = row.name.toLowerCase() + "." + row.surname.toLowerCase();
             }
@@ -54,17 +63,19 @@ export class User {
             throw err;
         }
     }
-    /**DEPRECATED
-     * 
-     * @param result 
-     * @returns 
+
+    /**
+     * DO NOT USE. DEPRECATED.
+     * Creates a new User instance with competencies.
+     * @param result - The result containing user and competency information.
+     * @returns A Promise that resolves to a User instance.
+     * @deprecated This method is deprecated.
      */
     static async createWithCompetencies(result: any): Promise<User> {
-        //console.log(result);
         if(result == null || result.rows == null){ throw new Error("Missing data. Skipping this person."); }
     
         const user = new User(result.rows[0]);
-        //console.log("Creating user with competencies" + user.username + " " + user.competencies);
+
         try {
             if(user.username === undefined || user.username === null || user.username === "") {
                 console.log("No username found, trying to find by email");
@@ -88,8 +99,11 @@ export class User {
     }
 } 
 
-
-// Set User's password to '' when sending it to the client
+/**
+ * Sanitizes the User object by removing the password.
+ * @param user - The User object to sanitize.
+ * @returns The sanitized User object.
+ */
 export const sanitizeUser = (user: User): User => {
     const sanitizedUser = user;
     sanitizedUser.password = '';

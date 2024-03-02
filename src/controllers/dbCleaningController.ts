@@ -1,5 +1,9 @@
 import { findUsersWithNoPassword, findUsersWithoutEmail, findUsersWithoutUsernames, findUsersWithUnencryptedPassword, encryptUnencryptedPasswords, emailPeopleWithNoUsername, emailPasswordResetLinks } from '../dao/databaseCleaningDAO';
 
+/**
+ * Controller for getting users with bad data.
+ * @param type The type of issue to look for. Can be password, email, username or unencrypted. 
+ */
 export const getUsersWithBadData = async (type: string) => {
     try {
         let users = [];

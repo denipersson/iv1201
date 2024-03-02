@@ -1,7 +1,15 @@
+
 import { Request, Response, NextFunction } from 'express';
 import { findPersonByUsername } from '../dao/personDAO';
 
-
+/**
+ * Middleware function to validate competency addition.
+ * 
+ * @param req - The Express request object.
+ * @param res - The Express response object.
+ * @param next - The next middleware function.
+ * @returns A JSON response with an error message if validation fails, or calls the next middleware function.
+ */
 export const validateCompetencyAdd = async (req: Request, res: Response, next: NextFunction) => {
     const { requestedUsername, competencyName, yearsOfExperience } = req.body;
 
