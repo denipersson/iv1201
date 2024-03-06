@@ -33,14 +33,11 @@ export const addAvailability = async (req: Request, res: Response) => {
 export const getAvailability = async (req: Request, res: Response) => {
     const headers = req.headers;
 
-    if(!headers) {
-        return res.status(401).json('Headers missing');
-    }
-
     // The frontend sends a get request containing the token in the header, as well as the username
     const token = headers['token'] as string;
     const userInfo = getUserFromToken(token);
     const username = userInfo.username;
+    console.log("WHAOAHO")
     try {
         if (username === undefined) {
             throw new Error("No personId provided");

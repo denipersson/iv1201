@@ -10,7 +10,7 @@ import { validateCompetencyAdd } from './middleware/validateCompetency';
 import { validatePasswordReset, validatePasswordResetLinkRequest } from './middleware/validatePasswordReset';
 import { getUsersWithBadData } from './controllers/dbCleaningController';
 import * as dotenv from 'dotenv';
-import { validateAdmin, validateAdminOrOwner } from './middleware/validateAdmin';
+import { validateAdmin, validateAdminOrOwner, validateUser } from './middleware/validateAdmin';
 import { validateAvailabilityAdd } from './middleware/validateAvailability'
 import { addAvailability, getAvailability } from './controllers/availabilityController'
 
@@ -86,7 +86,7 @@ app.post('/addAvailability', validateAdminOrOwner, validateAvailabilityAdd, addA
  * Endpoint for getting availability for a person.
  * @route get /getAvailability
  */
-app.get('/getAvailability', validateAdminOrOwner, getAvailability);
+app.get('/getAvailability', validateUser, getAvailability);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {

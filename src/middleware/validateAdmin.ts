@@ -92,3 +92,24 @@ export const validateAdminOrOwner = async (req: Request, res: Response, next: Ne
         res.status(500).json('An error occurred during user validation');
     });
 };
+
+export function validateUser(req: Request, res: Response, next: NextFunction) {
+    const headers = req.headers;
+
+    if (!headers) {
+        return res.status(401).json('Headers missing');
+    }
+
+    const token = headers['token'] as string;
+
+    if (!token) {
+        return res.status(401).json('Token missing in headers');
+    }
+
+    const check = validateToken(token);
+    if (!check.valid) {
+        return res.status(401).json('Invalid token');
+    }
+
+    next();
+}
