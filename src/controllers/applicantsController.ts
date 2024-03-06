@@ -17,6 +17,7 @@ export const getApplicants = async (req: Request, res: Response) => {
             applicants[i] = sanitizeUsers(applicants[i]);
         }
 
+        console.log('Applicants retrieved');
         res.status(200).json(applicants);
     } catch (error) {
         console.error('Error during applicant retrieval:', error);

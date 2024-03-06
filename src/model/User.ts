@@ -9,6 +9,7 @@ export class User {
     surname: string;
     email: string;
     competencies: any;
+    availability: any;
     password: string;
     pnr: string;
     role_id: number;
@@ -38,6 +39,7 @@ export class User {
         this.role_id = -1;
         this.username = "";
         this.competencies = [];
+        this.availability = [];
 
         try {
             // Set properties from the data row

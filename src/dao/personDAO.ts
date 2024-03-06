@@ -5,6 +5,7 @@ import { query } from '../config/database';
 import bcrypt from 'bcrypt';
 import { User } from '../model/User';
 import { getCompetenciesForPersonByUsername } from './CompetenceDAO';
+import { getAvailabilityForPersonByUsername } from './availabilityDAO';
 
 /**
  * Creates a new person in the database.
@@ -112,6 +113,7 @@ export const getApplicantsDAO = async () => {
                 applicants[i] = new User(result.rows[i]);
                 applicants[i].password = "-censored-";
                 applicants[i].competencies = await getCompetenciesForPersonByUsername(applicants[i].username);
+                applicants[i].availability = await getAvailabilityForPersonByUsername(applicants[i].username);
             } catch (err) {
                 console.error("Error in getApplicantsDAO: " + err);
             }
