@@ -16,13 +16,15 @@ import { addAvailability } from './controllers/availabilityController'
 
 const cors = require('cors');
 
+
 /**
  * The main application file for the IV1201 project.
  */
 
+// cors should allow http://localhost:3001 as well as https://frontend-iv-1201.vercel.app/ to access the server
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3001', // This should match the domain of your frontend application
+  origin: ['http://localhost:3001', 'https://frontend-iv-1201.vercel.app/'], // Allow the frontend to access this server
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 

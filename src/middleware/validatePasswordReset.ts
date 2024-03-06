@@ -46,6 +46,7 @@ export const validatePasswordResetLinkRequest = async (req: Request, res: Respon
 export const validatePasswordReset = (req: Request, res: Response, next: NextFunction) => {
     const { token, newPassword } = req.body;
 
+
     if (!token || !newPassword) {
         return res.status(400).json({ message: "Token and new password are required" });
     }
