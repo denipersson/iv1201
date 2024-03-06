@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { addAvailabilityForPerson, getAvailabilityForPersonByUsername } from '../dao/availabilityDAO'
+import { getUserFromToken } from '../helpers/token';
 
 /**
  * Adds availability for a person.
@@ -30,8 +31,16 @@ export const addAvailability = async (req: Request, res: Response) => {
  * @param res - The response object.
  */
 export const getAvailability = async (req: Request, res: Response) => {
-    const { username } = req.body;
+    const headers = req.headers;
 
+    if(!headers) {
+        return res.status(401).json('Headers missing');
+    }
+
+    // The frontend sends a get request containing the token in the header, as well as the username
+    const token = headers['token'] as string;
+    const userInfo = getUserFromToken(token);
+    const username = userInfo.username;
     try {
         if (username === undefined) {
             throw new Error("No personId provided");
