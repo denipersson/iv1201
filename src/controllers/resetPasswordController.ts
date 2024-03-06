@@ -1,9 +1,6 @@
-
-
 import { Request, Response } from 'express';
 import { findPersonByEmail, updatePersonPassword } from '../dao/personDAO';
 import { generatePasswordResetToken, getUserFromToken } from '../helpers/token';
-import { Console } from 'console';
 
 /**
  * Resets the password for a user.
@@ -15,7 +12,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     try {
         const decoded = getUserFromToken(token);
         updatePersonPassword(decoded.username, newPassword);
-
+       
         res.status(200).json({ message: "Password reset successfully" });
     } catch (error) {
         res.status(401).json({ message: "Invalid or expired token" });
