@@ -37,7 +37,7 @@ export const getAvailability = async (req: Request, res: Response) => {
     const token = headers['token'] as string;
     const userInfo = getUserFromToken(token);
     const username = userInfo.username;
-    console.log("WHAOAHO")
+
     try {
         if (username === undefined) {
             throw new Error("No personId provided");
