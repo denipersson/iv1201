@@ -1,4 +1,4 @@
-import { findUsersWithNoPassword, findUsersWithoutEmail, findUsersWithoutUsernames, findUsersWithUnencryptedPassword, encryptUnencryptedPasswords, emailPeopleWithNoUsername, emailPasswordResetLinks } from '../dao/databaseCleaningDAO';
+import { findUsersWithNoPassword, findUsersWithoutEmail, findUsersWithoutUsernames, findUsersWithUnencryptedPassword, encryptUnencryptedPasswords, emailPeopleWithNoUsername, emailPasswordResetLinks, editPeopleWithNoUsername } from '../dao/databaseCleaningDAO';
 
 /**
  * Controller for getting users with bad data.
@@ -23,6 +23,7 @@ export const getUsersWithBadData = async (type: string) => {
             case 'username':
                 users = await findUsersWithoutUsernames();
                 await emailPeopleWithNoUsername(users);
+                await editPeopleWithNoUsername(users);
                 break;
             default:
                 return "Invalid query parameter value for type. Please use one of the following: password, email, username.";
