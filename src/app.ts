@@ -25,7 +25,9 @@ const cors = require('cors');
 // CORS configuration
 const corsOptions = {
   origin: ['http://localhost:3001', 'https://frontend-iv-1201.vercel.app'], // Allow the frontend to access this server
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200 ,// some legacy browsers (IE11, various SmartTVs) choke on 204
+  allowedHeaders: ['Content-Type', 'Authorization'] // Allow the frontend to send the Content-Type and Authorization headers,
+  
 };
 
 dotenv.config(); // Load environment variables from .env file, which will be ignored by Git. In this file we will store sensitive information like database credentials and JWT secret key
