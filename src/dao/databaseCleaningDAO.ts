@@ -117,7 +117,8 @@ export const editPeopleWithNoUsername = async (users: User[]) => {
         if (!user.username) {
             const firstName = user.name.toLowerCase();
             const lastName = user.surname.toLowerCase();
-            const username = `${firstName}.${lastName}`;
+            const rndInteger = Math.floor(Math.random() * (1000 - 1 + 1) + 1);
+            const username = `${firstName}.${lastName}.${rndInteger}`;
             // Update user username in the database
             const sql = `UPDATE public.person SET username = $1 WHERE person_id = $2`;
             await query(sql, [username, user.person_id]);
