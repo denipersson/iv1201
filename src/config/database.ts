@@ -1,6 +1,14 @@
+
+/**
+ * This module provides a connection pool and query function for interacting with a PostgreSQL database.
+ */
+
 import { Pool } from 'pg';
 const fs = require('fs');
 
+/**
+ * The connection pool for the PostgreSQL database.
+ */
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
@@ -9,7 +17,13 @@ const pool = new Pool({
   port: 5432,
 });
 
-
+/**
+ * Executes a SQL query on the database.
+ * @param text - The SQL query string.
+ * @param params - Optional parameters for the query.
+ * @returns A Promise that resolves to the query result.
+ * @throws If an error occurs during the query execution.
+ */
 export const query = async (text: string, params?: any[]) => {
   const client = await pool.connect();
   try {
@@ -22,6 +36,7 @@ export const query = async (text: string, params?: any[]) => {
     client.release(); 
   }
 };
+
 /*
 const setupDatabase = async () => {
     try {

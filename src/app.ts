@@ -94,4 +94,5 @@ app.listen(PORT, async () => {
 
   // Perform database cleaning
   await getUsersWithBadData('unencrypted'); // can be: password, unencrypted, email, username
+
 });

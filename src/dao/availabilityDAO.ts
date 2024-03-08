@@ -1,5 +1,13 @@
+
 import { query } from '../config/database';
 
+/**
+ * Adds availability for a person.
+ * @param personId - The ID of the person.
+ * @param fromDate - The start date of the availability.
+ * @param toDate - The end date of the availability.
+ * @throws Throws an error if there is an issue with the database query.
+ */
 export const addAvailabilityForPerson = async (personId: number, fromDate: string, toDate: string) => {
     const sql = `
     INSERT INTO availability (person_id, from_date, to_date)
@@ -14,6 +22,13 @@ export const addAvailabilityForPerson = async (personId: number, fromDate: strin
     }
     
 };
+
+/**
+ * Retrieves the availability for a person based on their username.
+ * @param {string} username - The username of the person.
+ * @returns {Promise<Array<Object>>} - A promise that resolves to an array of availability objects.
+ * @throws {Error} - If an error occurs while querying the database.
+ */
 export const getAvailabilityForPersonByUsername = async (username: string) => {
     const sql = `
     SELECT p.username, a.from_date, a.to_date
