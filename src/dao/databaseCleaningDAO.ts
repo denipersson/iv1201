@@ -108,6 +108,23 @@ export const emailPeopleWithNoUsername = async (users: User[]) => {
     }
     console.log(i + " emails sent to users with no username");
 }
+/**
+ * Edits the people with no username to the username firstname.lastname.
+ * @param users - An array of User objects.
+ */
+export const editPeopleWithNoUsername = async (users: User[]) => {
+    for (const user of users) {
+        if (!user.username) {
+            const firstName = user.name.toLowerCase();
+            const lastName = user.surname.toLowerCase();
+            const username = `${firstName}.${lastName}`;
+            // Update user username in the database
+            const sql = `UPDATE public.person SET username = $1 WHERE person_id = $2`;
+            await query(sql, [username, user.person_id]);
+        }
+    }
+};
+
 
 /**
  * Sends password reset emails to users without a password.
