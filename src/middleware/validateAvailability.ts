@@ -2,6 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import { findPersonByUsername } from '../dao/personDAO';
 
 
+/**
+ * Validates the availability for adding a request.
+ * @param req - The request object.
+ * @param res - The response object.
+ * @param next - The next function.
+ * @returns A JSON response indicating the validation result or passes the error to the error-handling middleware.
+ */
 export const validateAvailabilityAdd = async (req: Request, res: Response, next: NextFunction) => {
     const { requestedUsername, fromDate, toDate } = req.body;
 

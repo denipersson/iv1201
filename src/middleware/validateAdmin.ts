@@ -93,6 +93,15 @@ export const validateAdminOrOwner = async (req: Request, res: Response, next: Ne
     });
 };
 
+/**
+ * Validates the user by checking the presence of headers and a valid token.
+ * If the headers or token are missing or invalid, it sends an appropriate error response.
+ * Otherwise, it calls the next middleware function.
+ * 
+ * @param req - The request object.
+ * @param res - The response object.
+ * @param next - The next middleware function.
+ */
 export function validateUser(req: Request, res: Response, next: NextFunction) {
     const headers = req.headers;
 
