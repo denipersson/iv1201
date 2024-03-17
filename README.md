@@ -43,6 +43,8 @@ Welcome to the backend repository for our project! This repository contains the 
 
 You can find the frontend repository for this project [here](https://github.com/danti58/Frontend_IV1201).
 
+## Project Architectural Decisions
+You can find the document for the project's architectural decisions [here](https://docs.google.com/document/d/1gWo1ijLxyZT4eF8KKFxvUuuaw3QfT_TpaXjfWpQ4A_A/edit?usp=sharing).
 
 ## Contributing
 We welcome contributions from everyone! If you'd like to contribute to the frontend development, please follow these guidelines:
